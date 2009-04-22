@@ -1,0 +1,10 @@
+.*.swp
+config/config.yml
+config/database.yml
+log/*.log
+log/*.log.*
+public/system/*
+tmp/pids/*
+tmp/*
+*.DS_Store
+*.tar.gz
