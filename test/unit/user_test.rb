@@ -1,10 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class UserTest < ActiveSupport::TestCase
-  # Be sure to include AuthenticatedTestHelper in test/test_helper.rb instead.
-  # Then, you can remove it from this and the functional test.
-  include AuthenticatedTestHelper
-  fixtures :users
 
   def test_should_create_user
     assert_difference 'User.count' do
@@ -94,9 +90,15 @@ class UserTest < ActiveSupport::TestCase
     assert users(:quentin).remember_token_expires_at.between?(before, after)
   end
 
-protected
+  protected
+
   def create_user(options = {})
-    record = User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'quire69', :password_confirmation => 'quire69' }.merge(options))
+    record = User.new({
+      :login => 'quire',
+      :email => 'quire@example.com',
+      :password => 'quire69',
+      :password_confirmation => 'quire69',
+      :city_id => cities(:beska).id }.merge(options))
     record.save
     record
   end

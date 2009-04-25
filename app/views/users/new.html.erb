@@ -9,6 +9,11 @@
 <p><%= label_tag 'email' %><br/>
 <%= f.text_field :email %></p>
 
+<% fields_for 'user[city_attributes]', @user.city do |c| %>
+  <label for="user_city_attributes_name">City</label> <br />
+  <%= c.text_field :name %>
+<% end -%>
+
 <p><%= label_tag 'password' %><br/>
 <%= f.password_field :password %></p>
 
