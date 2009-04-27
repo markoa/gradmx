@@ -3,6 +3,8 @@ class Location < ActiveRecord::Base
   belongs_to :user
   belongs_to :city
 
+  has_many :events
+
   validates_presence_of :name
   validates_presence_of :city
 

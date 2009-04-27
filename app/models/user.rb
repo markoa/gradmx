@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
   belongs_to :city
 
   has_many :locations # published
+  has_many :events    # published
 
   validates_presence_of     :login
   validates_length_of       :login,    :within => 3..40

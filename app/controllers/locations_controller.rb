@@ -6,7 +6,7 @@ class LocationsController < ApplicationController
   # GET /locations/new
   # GET /locations/new.xml
   def new
-    @location = @user.locations.new
+    @location = Location.new
 
     respond_to do |format|
       format.html # new.html.erb
@@ -17,7 +17,7 @@ class LocationsController < ApplicationController
   # POST /locations
   # POST /locations.xml
   def create
-    @location = Location.new params[:location]
+    @location = Location.new params[:location].merge(:user => @user)
 
     respond_to do |format|
       if @location.save
