@@ -1,0 +1,16 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+crni_bik:
+  id: 1
+  name: Crni Bik
+  city: novisad
+
+art_klinika:
+  id: 2
+  name: Art Klinika
+  city: novisad
+
+dom_kult_b:
+  id: 3
+  name: Dom Kulture
+  city: beska
