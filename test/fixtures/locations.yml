@@ -4,13 +4,16 @@ crni_bik:
   id: 1
   name: Crni Bik
   city: novisad
+  description: Kafana u Zeleznickoj
 
 art_klinika:
   id: 2
   name: Art Klinika
   city: novisad
+  description: utopistički projekat grupe građana
 
 dom_kult_b:
   id: 3
   name: Dom Kulture
   city: beska
+  description: Samo jedan dom kulture

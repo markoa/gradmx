@@ -1,0 +1,19 @@
+<h1> New location </h1>
+
+<%= error_messages_for :location %>
+
+<% form_for :location, :url => locations_path do |f| -%>
+
+  <p><%= label_tag 'name' %><br/>
+  <%= f.text_field :name %></p>
+
+  <% fields_for 'location[city_attributes]', @location.city do |c| %>
+    <label for="location_city_attributes_name">City</label> <br />
+    <%= c.text_field :name %>
+  <% end -%>
+
+  <p><%= label_tag 'description' %><br/>
+  <%= f.text_area :description %></p>
+
+  <p><%= submit_tag 'Publish' %></p>
+<% end -%>
