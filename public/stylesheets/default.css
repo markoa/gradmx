@@ -1,0 +1,101 @@
+/*
+|------------------------------------------------------------------------------|
+| SUPERAWESOME CSS FRAMEWORK - EMBEDDABLE STYLE SHEET |
+|------------------------------------------------------------------------------|
+| v1.0 by Dragan Babic | http://sprawsm.com/          |
+|------------------------------------------------------------------------------|
+*/
+
+@import "sprawsm-typography.css";
+@import "sprawsm-layout.css";
+@import "sprawsm-extras.css";
+@import "sprawsm-wireframe.css";
+
+/* !Generals */
+html{}
+body{}
+
+/* !Link Colors */
+
+a:link{}
+a:visited{}
+a:hover{}
+a:active{}
+
+/* !Headings */
+
+h1 {
+  font-size: 160%;
+  line-height: 120%;
+  width: 960px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+h1 strong, #header h1 strong a {
+  float: left;
+  color: #F6D86B;
+  letter-spacing: -1px;
+  text-decoration: none;
+}
+
+h1 em {
+  float: right;
+  font-size: 60%;
+  font-weight: normal;
+  font-style: normal;
+  text-transform: uppercase;
+  background: #eee;
+  color: #000;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+h2 {
+  text-transform: uppercase;
+  font-size: 1.4em;
+}
+
+h3 {
+  margin: 1em 1.25%;
+  text-align: center;
+}
+
+/* !Header */
+
+#header {
+  padding: 1em 0;
+  border-bottom: 1px solid #9e5c8b;
+  background: #A70267;
+  color: #fff;
+}
+
+/* !Footer */
+
+#footer{
+  border-top: 1px solid #dfdfdf;
+  background: #efefef;
+  margin-top: 1.5em;
+  padding: 1em 0;
+}
+
+#footer p {
+  width: 960px;
+  margin: 0 auto;
+  text-transform: uppercase;
+  font-size: 10px;
+  text-align: right;
+}
+
+/* !Main Content */
+
+#mainContent {
+  width: 960px;
+  margin: 0 auto;
+}
+#content{ position: relative; }
+  #mainContent{}
+    #content:after, #mainContent:after{ content: "."; display: block; height: 0; line-height: 0; font-size: 0; clear: both; min-height: 0; visibility: hidden; }
+
+.col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, .col-ms{ margin: 0 0 1em 0; padding: 1px 0 1em 0; }
+.col{ }

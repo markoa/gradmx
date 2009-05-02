@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <title> <% yield :title %> </title>
+  <%= stylesheet_link_tag 'default' %>
+
+  <!--style type="text/css" media="screen">@import "stylesheets/default.css";</style-->
+  <!-- IE Specific Style Sheets -->
+  <!--[if lte ie 6]><style type="text/css" media="screen">@import "stylesheets/ie6.css";</style><![endif]-->
+  <!--[if gt ie 6]><style type="text/css" media="screen">@import "stylesheets/ie7.css";</style><![endif]-->
+</head>
+<body>
+  <div id="header">
+    <h1>
+      <strong><%= link_to "gradmx", root_path %></strong>
+      <em><%= flash[:notice] %></em>
+    </h1>
+  </div>
+
+  <div id="mainContent" class="sprawsm-pix">
+
+    <h2 class="nonHolder">
+      <%= yield :page_header %>
+    </h2>
+
+    <div class="col-ms">
+      <div class="col cs-8">
+        <%= yield %>
+      </div>
+      
+      <div class="col cs-4">
+        <%= yield :right_column %>
+      </div>
+    </div>
+
+  </div> <!-- #mainContent -->
+
+</body>
+</html>

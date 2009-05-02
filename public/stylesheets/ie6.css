@@ -1,0 +1,24 @@
+/* !Uni-Form fixes
+.uniForm, .uniForm fieldset, .uniForm .ctrlHolder, .uniForm .formHint, .uniForm .buttonHolder, .uniForm .ctrlHolder .multiField, .uniForm .inlineLabel{ zoom:1; }
+.uniForm .inlineLabels label, .uniForm .inlineLabels .label, .uniForm .blockLabels label, .uniForm .blockLabels .label, .uniForm .inlineLabel span{ padding-bottom: .2em; }
+.uniForm .inlineLabel input, .uniForm .inlineLabels .inlineLabel input, .uniForm .blockLabels .inlineLabel input{ margin-top: -.3em; }
+ */
+
+/* !Superawesome CSS framework fixes */
+#content, #mainContent,
+.col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, .col-ms,
+.overflowClear, .afterClear, .zoom{ zoom: 1; }
+
+.col{ display: inline; }
+
+/* Set image interpolation to bicubic */
+img{ -ms-interpolation-mode: bicubic; }
+
+/* Fix Buttons */
+button, strong.button input{ width: auto; overflow: visible; }
+.button{ padding-left: 3px; }
+  .button a,
+  .button button,
+  .button input{ margin: 0; }
+
+/* ##### SITE SPECIFIC RULES BELOW ##### */
