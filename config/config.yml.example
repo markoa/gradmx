@@ -19,7 +19,7 @@ test:
     name: gradmx
     domain: localhost:3000
     session_key: _gradmx_test_session
-    secret:6360b0dfea01fc11bd1c907222aba5a4cf4e137e4e1b7630b1a51ababbd2545ad943e179ed6f28b0c894f148230c538974c7262028895baa8762adbb268be114c7ee581d44d2e31d2f7034bbef8319efad8ed9eca2be4285ad60c1521a08f674d2fa66a6031a049a8f4ee1ffa9cc38b3a9d18e8acd482583711249c84dcd3a3e 
+    secret: 6360b0dfea01fc11bd1c907222aba5a4cf4e137e4e1b7630b1a51ababbd2545ad943e179ed6f28b0c894f148230c538974c7262028895baa8762adbb268be114c7ee581d44d2e31d2f7034bbef8319efad8ed9eca2be4285ad60c1521a08f674d2fa66a6031a049a8f4ee1ffa9cc38b3a9d18e8acd482583711249c84dcd3a3e 
     email_activation_required: true
   mail:
     address: mail.yourapplication.com
@@ -35,7 +35,7 @@ production:
     name: gradmx
     domain: localhost:3000
     session_key: _gradmx_session
-    secret:f9e1d7c415cab9c0615a297621a9929790e64613c77a84037584bb027090be0b02b0876b78da98a8161786d56c8342a7d8a67a5d9e4fda87c34279650f7998dd0c5a5d0805ed1f3feb8b293791c9686c5c447d4bb8ff84f38275901f65ff93894876ce7a8c3cfe8c5f8d711317fb1d2cca317d71d8a8b7cbcf6f1d9f5d3c8c5e 
+    secret: f9e1d7c415cab9c0615a297621a9929790e64613c77a84037584bb027090be0b02b0876b78da98a8161786d56c8342a7d8a67a5d9e4fda87c34279650f7998dd0c5a5d0805ed1f3feb8b293791c9686c5c447d4bb8ff84f38275901f65ff93894876ce7a8c3cfe8c5f8d711317fb1d2cca317d71d8a8b7cbcf6f1d9f5d3c8c5e 
     email_activation_required: false
   mail:
     address: mail.yourapplication.com
