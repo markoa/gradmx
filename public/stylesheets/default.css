@@ -17,9 +17,15 @@ body{}
 
 /* !Link Colors */
 
-a:link{}
-a:visited{}
-a:hover{}
+a:link, a:visited {
+  color: #339194;
+}
+
+a:hover {
+  background: #339194;
+  color: #fff;
+}
+
 a:active{}
 
 /* !Headings */
@@ -54,6 +60,10 @@ h1 em {
 h2 {
   text-transform: uppercase;
   font-size: 1.4em;
+}
+
+.nonHolder {
+  padding: 0.5em 0;
 }
 
 h3 {
@@ -93,9 +103,18 @@ h3 {
   width: 960px;
   margin: 0 auto;
 }
+
 #content{ position: relative; }
   #mainContent{}
     #content:after, #mainContent:after{ content: "."; display: block; height: 0; line-height: 0; font-size: 0; clear: both; min-height: 0; visibility: hidden; }
 
-.col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, .col-ms{ margin: 0 0 1em 0; padding: 1px 0 1em 0; }
+#mainContent {
+  font-size: 1.4em;
+}
+
+.col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, .col-ms {
+  margin: 0 0 1em 0;
+  padding: 1px 0 1em 0;
+}
+
 .col{ }
