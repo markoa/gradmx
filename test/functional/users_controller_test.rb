@@ -63,7 +63,10 @@ class UsersControllerTest < ActionController::TestCase
       :email => 'quire@example.com',
       :password => 'quire69',
       :password_confirmation => 'quire69',
-      :city_attributes => { :name => "Beska" }.merge(city_options)
+      :city_attributes => {
+        :name => "Beska",
+        :country_name => "Serbia"
+      }.merge(city_options)
     }.merge(options)
   end
 

@@ -25,7 +25,7 @@ class Location < ActiveRecord::Base
   end
 
   def city_attributes=(attrs)
-    c = City.parse(attrs['name'])
+    c = City.parse(attrs['name'], attrs['country_name'])
     c.save if c.new_record?
     write_attribute('city_id', c.id)
   end

@@ -3,7 +3,9 @@
 novisad:
   name: Novi Sad
   code: novi-sad
+  country_name: Serbia
 
 beska:
   name: Beška
   code: beska
+  country_name: Serbia

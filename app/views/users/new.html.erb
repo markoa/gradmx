@@ -2,23 +2,41 @@
 <% @user.password = @user.password_confirmation = nil %>
 
 <%= error_messages_for :user %>
+
 <% form_for :user, :url => users_path do |f| -%>
-<p><%= label_tag 'login' %><br/>
-<%= f.text_field :login %></p>
+  <div class="ctrlHolder">
+    <%= label_tag 'login' %><br/>
+    <%= f.text_field :login %>
+  </div>
 
-<p><%= label_tag 'email' %><br/>
-<%= f.text_field :email %></p>
+  <div class="ctrlHolder">
+    <%= label_tag 'email' %><br/>
+    <%= f.text_field :email %>
+  </div>
 
-<% fields_for 'user[city_attributes]', @user.city do |c| %>
-  <label for="user_city_attributes_name">City</label> <br />
-  <%= c.text_field :name %>
-<% end -%>
+  <% fields_for 'user[city_attributes]', @user.city do |c| %>
+    <div class="ctrlHolder">
+      <label for="user_city_attributes_name">City</label> <br />
+      <%= c.text_field :name %>
+    </div>
 
-<p><%= label_tag 'password' %><br/>
-<%= f.password_field :password %></p>
+    <div class="ctrlHolder">
+      <label for="user_city_attributes_country_name">Country</label> <br />
+      <%= c.country_select :country_name %>
+    </div>
+  <% end -%>
 
-<p><%= label_tag 'password_confirmation', 'Confirm Password' %><br/>
-<%= f.password_field :password_confirmation %></p>
+  <div class="ctrlHolder">
+    <%= label_tag 'password' %><br/>
+    <%= f.password_field :password %>
+  </div>
 
-<p><%= submit_tag 'Sign up' %></p>
+  <div class="ctrlHolder">
+    <%= label_tag 'password_confirmation', 'Confirm Password' %><br/>
+    <%= f.password_field :password_confirmation %>
+  </div>
+
+  <div class="ctrlHolder">
+    <%= submit_tag 'Sign up' %>
+  </div>
 <% end -%>

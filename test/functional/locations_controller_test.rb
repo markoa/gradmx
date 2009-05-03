@@ -48,7 +48,7 @@ class LocationsControllerTest < ActionController::TestCase
     login_as :quentin
     assert_no_difference 'Location.count' do
       create_location(:options => { :name => "crni bik" },
-                      :city_options => { :name => "novi sad" })
+                      :city_options => { :name => "novi sad", :country_name => "Serbia" })
       assert assigns(:location).errors.on(:name)
       assert_response :success
     end
@@ -62,7 +62,10 @@ class LocationsControllerTest < ActionController::TestCase
 
     post :create, "location" => {
       "name" => "Some place",
-      "city_attributes" => { "name" => "Istanbul"}.merge(city_options),
+      "city_attributes" => {
+        "name" => "Istanbul",
+        "country_name" => "Turkey"
+      }.merge(city_options),
       "description" => "Very very short"
     }.merge(options)
   end
