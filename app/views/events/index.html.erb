@@ -1,29 +1,12 @@
 <%= page_h "Events" %>
 
-<table>
-  <tr>
-    <th>Title</th>
-    <th>Description</th>
-    <th>Time begin</th>
-    <th>Time end</th>
-    <th>User</th>
-    <th>Location</th>
-  </tr>
-
+<ul>
 <% @events.each do |event| %>
-  <tr>
-    <td><%=h event.title %></td>
-    <td><%=h event.description %></td>
-    <td><%=h event.time_begin %></td>
-    <td><%=h event.time_end %></td>
-    <td><%=h event.user_id %></td>
-    <td><%=h event.location_id %></td>
-    <td><%= link_to 'Show', event %></td>
-    <td><%= link_to 'Edit', edit_event_path(event) %></td>
-    <td><%= link_to 'Destroy', event, :confirm => 'Are you sure?', :method => :delete %></td>
-  </tr>
+  <li>
+    <%=link_to(h(event.title), event) %>
+  </li>
 <% end %>
-</table>
+</ul>
 
 <br />
 
@@ -32,7 +15,7 @@
 <% content_for :right_column do %>
   <h3>Locations</h3>
   <ul>
-    <% for loc in @locations %>
+    <% for loc in @locations.reverse %>
       <li><%= link_to loc.name, loc %></li>
     <% end %>
   </ul>
