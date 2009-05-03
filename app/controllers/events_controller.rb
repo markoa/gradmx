@@ -6,6 +6,7 @@ class EventsController < ApplicationController
   # GET /events.xml
   def index
     @events = Event.all
+    @locations = Location.recent
 
     respond_to do |format|
       format.html # index.html.erb

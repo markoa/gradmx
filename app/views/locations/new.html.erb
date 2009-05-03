@@ -1,4 +1,4 @@
-<h1> New location </h1>
+<%= page_h("New location") %>
 
 <%= error_messages_for :location %>
 
@@ -13,7 +13,7 @@
   <% end -%>
 
   <p><%= label_tag 'description' %><br/>
-  <%= f.text_area :description %></p>
+  <%= f.text_area :description, :rows => 8, :cols => 72 %></p>
 
   <p><%= submit_tag 'Publish' %></p>
 <% end -%>

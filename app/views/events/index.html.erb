@@ -1,4 +1,4 @@
-<h1>Listing events</h1>
+<%= page_h "Events" %>
 
 <table>
   <tr>
@@ -28,3 +28,14 @@
 <br />
 
 <%= link_to 'New event', new_event_path %>
+
+<% content_for :right_column do %>
+  <h3>Locations</h3>
+  <ul>
+    <% for loc in @locations %>
+      <li><%= link_to loc.name, loc %></li>
+    <% end %>
+  </ul>
+
+  <%= link_to "See all", locations_path %>
+<% end %>

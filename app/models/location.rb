@@ -14,6 +14,10 @@ class Location < ActiveRecord::Base
     loc.validate_city
   end
 
+  def self.recent(limit = 5)
+    find(:all, :limit => limit, :order => "created_at DESC")
+  end
+
   # City is a nested attribute
   def city
     c = City.find(self.city_id) unless self.city_id.nil?

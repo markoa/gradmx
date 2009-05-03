@@ -38,11 +38,12 @@ h1 {
   margin: 0 auto;
 }
 
-h1 strong, #header h1 strong a {
+h1 strong, #header h1 strong a, #header h1 strong a:hover {
   float: left;
   color: #F6D86B;
   letter-spacing: -1px;
   text-decoration: none;
+  background: none;
 }
 
 h1 em {
@@ -69,6 +70,10 @@ h2 {
 h3 {
   margin: 1em 1.25%;
   text-align: center;
+}
+
+.cs-4 h3 {
+  text-align: left;
 }
 
 /* !Header */

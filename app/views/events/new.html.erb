@@ -1,31 +1,35 @@
-<h1>New event</h1>
+<%= page_h "New event" %>
 
 <% form_for(@event) do |f| %>
   <%= f.error_messages %>
 
-  <p>
+  <div>
     <%= f.label :title %><br />
     <%= f.text_field :title %>
-  </p>
-  <p>
-    <%= f.label :description %><br />
-    <%= f.text_area :description %>
-  </p>
-  <p>
-    <%= f.label :time_begin %><br />
-    <%= f.datetime_select :time_begin %>
-  </p>
-  <p>
-    <%= f.label :time_end %><br />
-    <%= f.datetime_select :time_end %>
-  </p>
-  <p>
+  </div>
+  <div>
     <%= f.label :location_id %><br />
     <%= f.text_field :location_id %>
-  </p>
-  <p>
+  </div>
+  <div>
+    <%= f.label :time_begin %><br />
+    <%= f.datetime_select :time_begin,
+          :default => 2.hours.from_now.utc,
+          :start_year => Time.now.to_date.year %>
+  </div>
+  <div>
+    <%= f.label :time_end %><br />
+    <%= f.datetime_select :time_end,
+          :include_blank => true,
+          :start_year => Time.now.to_date.year %>
+  </div>
+  <div>
+    <%= f.label :description %><br />
+    <%= f.text_area :description, :rows => 8, :cols => 72 %>
+  </div>
+  <div>
     <%= f.submit 'Create' %>
-  </p>
+  </div>
 <% end %>
 
 <%= link_to 'Back', events_path %>
