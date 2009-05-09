@@ -4,13 +4,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-  <title> <% yield :title %> </title>
+  <title> <%= yield :title %> </title>
   <%= stylesheet_link_tag 'default' %>
 
-  <!--style type="text/css" media="screen">@import "stylesheets/default.css";</style-->
   <!-- IE Specific Style Sheets -->
   <!--[if lte ie 6]><style type="text/css" media="screen">@import "stylesheets/ie6.css";</style><![endif]-->
   <!--[if gt ie 6]><style type="text/css" media="screen">@import "stylesheets/ie7.css";</style><![endif]-->
+
+  <%= yield :head %>
 </head>
 <body>
   <div id="header">

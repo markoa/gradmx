@@ -5,6 +5,10 @@ module ApplicationHelper
     content_for :page_header do
       text
     end
+
+    content_for :title do
+      "#{text} ★ gradmx"
+    end
   end
 
 end

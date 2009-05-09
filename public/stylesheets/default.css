@@ -59,7 +59,7 @@ h1 em {
 }
 
 h2 {
-  text-transform: uppercase;
+  text-transform: none;
   font-size: 1.4em;
 }
 
@@ -123,3 +123,10 @@ h3 {
 }
 
 .col{ }
+
+/* forms */
+
+.ctrlHolder {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}

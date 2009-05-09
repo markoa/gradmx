@@ -1,14 +1,23 @@
 <%= page_h("Log In") %>
 
-<% form_tag session_path do -%>
-<p><%= label_tag 'login' %><br />
-<%= text_field_tag 'login', @login %></p>
+<% form_tag session_path, :id => 'loginForm' do -%>
 
-<p><%= label_tag 'password' %><br/>
-<%= password_field_tag 'password', nil %></p>
+  <div class="ctrlHolder">
+    <%= label_tag 'login' %> <br />
+    <%= text_field_tag 'login', @login %>
+  </div>
 
-<p><%= label_tag 'remember_me', 'Remember me' %>
-<%= check_box_tag 'remember_me', '1', @remember_me %></p>
+  <div class="ctrlHolder">
+    <%= label_tag 'password' %><br/>
+    <%= password_field_tag 'password', nil %>
+  </div>
 
-<p><%= submit_tag 'Log in' %></p>
+  <div class="ctrlHolder">
+    <%= label_tag 'remember_me', 'Remember me' %>
+    <%= check_box_tag 'remember_me', '1', @remember_me %>
+  </div>
+
+  <div class="ctrlHolder">
+    <%= submit_tag 'Log in' %>
+  </div>
 <% end -%>
