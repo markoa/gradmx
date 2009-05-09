@@ -8,7 +8,10 @@ class Location < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :city
 
-  validates_uniqueness_of :name, :scope => :city_id, :case_sensitive => false, :message => "is already published"
+  validates_uniqueness_of :name, :scope => :city_id,
+    :case_sensitive => false, :message => "is already published"
+
+  find_by_autocomplete :name
 
   validate do |loc|
     loc.validate_city

@@ -7,6 +7,8 @@ class Event < ActiveRecord::Base
   validates_presence_of :time_begin
   validates_presence_of :location
 
+  autocomplete_for 'location', 'name' # adds auto_location_name=
+
   def self.per_page
     10
   end

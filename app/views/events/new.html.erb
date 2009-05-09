@@ -1,32 +1,70 @@
+<% content_for :head do %>
+  <%= stylesheet_link_tag 'jquery.autocomplete' %>
+  <%= javascript_include_tag 'jquery-1.3.2.min', 'jquery.dimensions', 'jquery.autocomplete', :cache => 'jquery' %>
+
+  <script type="text/javascript">
+    function onAutoCompleteFormatItem(row) {
+      return row[0] + "<br><i>" + row[1] + "</i>";
+    }
+
+    function onAutoCompleteSelect(li) {
+      if (li.extra) {
+        // first extra item is city, second is location id
+        $("#event_location_id").val(li.extra[1]);
+      }
+    }
+
+    $(document).ready(function() {
+      $('input.autocomplete').each(function(){
+        var input = $(this);
+        input.autocomplete(
+          input.attr('autocomplete_url'),
+          { formatItem: onAutoCompleteFormatItem,
+            onItemSelect: onAutoCompleteSelect }
+        );
+      });
+    });
+  </script>
+
+<% end %>
+
 <%= page_h "New event" %>
 
 <% form_for(@event) do |f| %>
   <%= f.error_messages %>
 
-  <div>
+  <div class="ctrlHolder">
     <%= f.label :title %><br />
     <%= f.text_field :title %>
   </div>
-  <div>
-    <%= f.label :location_id %><br />
-    <%= f.text_field :location_id %>
+
+  <div class="ctrlHolder">
+    <%= label_tag 'Location' %><br />
+    <%= f.text_field :auto_location_name,
+          :class => 'autocomplete',
+          'autocomplete_url' => autocomplete_for_location_name_locations_path %>
+    <%= f.hidden_field :location_id %>
   </div>
-  <div>
+
+  <div class="ctrlHolder">
     <%= f.label :time_begin %><br />
     <%= f.datetime_select :time_begin,
           :default => 2.hours.from_now.utc,
           :start_year => Time.now.to_date.year %>
   </div>
-  <div>
+
+  <div class="ctrlHolder">
     <%= f.label :time_end %><br />
     <%= f.datetime_select :time_end,
           :include_blank => true,
           :start_year => Time.now.to_date.year %>
   </div>
-  <div>
+
+  <div class="ctrlHolder">
     <%= f.label :description %><br />
     <%= f.text_area :description, :rows => 8, :cols => 72 %>
   </div>
+
   <div>
     <%= f.submit 'Create' %>
   </div>

@@ -3,6 +3,10 @@ class LocationsController < ApplicationController
   before_filter :login_required, :except => 'show'
   before_filter :find_location, :only => ['edit', 'update', 'destroy', 'show']
 
+  autocomplete_for :location, :name do |locations|
+    locations.map { |loc| "#{loc.name}|#{loc.city.name}|#{loc.id}" }.join("\n")
+  end
+
   # GET /locations/new
   # GET /locations/new.xml
   def new

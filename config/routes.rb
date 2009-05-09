@@ -7,7 +7,9 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :users
   map.resources :events
-  map.resources :locations
+  map.resources :locations, :collection => {
+    :autocomplete_for_location_name => :get
+  }
 
   map.resource :session
 
