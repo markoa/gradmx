@@ -7,6 +7,10 @@ class Event < ActiveRecord::Base
   validates_presence_of :time_begin
   validates_presence_of :location
 
+  def self.per_page
+    10
+  end
+
   def validate
     if not time_end.blank? and not time_begin.blank? and time_end <= time_begin
       errors.add("time_end", "must be after the beginning time")

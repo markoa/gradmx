@@ -5,12 +5,15 @@ class EventsController < ApplicationController
   # GET /events
   # GET /events.xml
   def index
-    @events = Event.all
-    @locations = Location.recent
-
     respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @events }
+      format.html { # index.html.erb
+        @events = Event.paginate(:page => params[:page])
+        @locations = Location.recent
+      }
+      format.xml  {
+        @events = Event.all
+        render :xml => @events
+      }
     end
   end
 
