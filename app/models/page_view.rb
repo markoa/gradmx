@@ -69,6 +69,11 @@ class PageView
       objects
     end
 
+    def count
+      #TODO: will depend on key prefix
+      @@table.size
+    end
+
     def create(request, options = {})
       object = new(request, options)
       object.save
