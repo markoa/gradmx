@@ -21,6 +21,7 @@ class EventsController < ApplicationController
   # GET /events/1.xml
   def show
     @event = Event.find(params[:id])
+    PageView.create(request, :event_id => @event.id)
 
     respond_to do |format|
       format.html # show.html.erb
