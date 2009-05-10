@@ -26,6 +26,9 @@ Rails::Initializer.run do |config|
   config.gem "mislav-will_paginate", :version => "2.3.8",
     :lib => "will_paginate", :source => "http://gems.github.com"
 
+  config.gem "rufus-tokyo", :version => "0.1.12",
+    :lib => "rufus/tokyo/tyrant", :source => "http://gems.github.com"
+
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
@@ -58,3 +61,6 @@ Rails::Initializer.run do |config|
   config.active_record.timestamped_migrations = false
 
 end
+
+# Tokyo Tyrant connections
+PageView.table = Rufus::Tokyo::TyrantTable.new('localhost', 19850)
