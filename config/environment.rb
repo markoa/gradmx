@@ -63,4 +63,5 @@ Rails::Initializer.run do |config|
 end
 
 # Tokyo Tyrant connections
+# ttserver -port 19850 page_views.tct
 PageView.table = Rufus::Tokyo::TyrantTable.new('localhost', 19850)

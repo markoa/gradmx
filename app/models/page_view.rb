@@ -33,18 +33,18 @@ class PageView
   end
 
   def connected?
-    !@@table.nil?
+    !table.nil?
   end
 
   def save
     if @key.nil?
-      @key = @@table.genuid.to_s
+      @key = table.genuid.to_s
     end
-    @@table[@key] = @data
+    table[@key] = @data
   end
 
   def destroy
-    @@table.delete(@key)
+    table.delete(@key)
   end
 
   def method_missing(key, *args)
@@ -63,15 +63,14 @@ class PageView
 
   class << self # Class methods
     def all
-      records = @@table.query { |q| }
+      records = table.query { |q| }
       objects = []
       records.each { |r| objects << PageView.new(r) }
       objects
     end
 
     def count
-      #TODO: will depend on key prefix
-      @@table.size
+      table.size
     end
 
     def create(request, options = {})
