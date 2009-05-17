@@ -5,6 +5,7 @@ class EventsController < ApplicationController
   # GET /events
   # GET /events.xml
   def index
+    store_page_view
     respond_to do |format|
       format.html { # index.html.erb
         @events = Event.paginate(:page => params[:page])
@@ -21,7 +22,7 @@ class EventsController < ApplicationController
   # GET /events/1.xml
   def show
     @event = Event.find(params[:id])
-    PageView.create(request, :event_id => @event.id)
+    store_page_view(:event_id => @event.id)
 
     respond_to do |format|
       format.html # show.html.erb
@@ -43,6 +44,7 @@ class EventsController < ApplicationController
   # GET /events/1/edit
   def edit
     @event = Event.find(params[:id])
+    store_page_view(:event_id => @event.id)
   end
 
   # POST /events

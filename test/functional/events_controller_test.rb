@@ -39,8 +39,19 @@ class EventsControllerTest < ActionController::TestCase
   end
 
   test "should show event" do
-    get :show, :id => events(:one).to_param
-    assert_response :success
+    assert_difference 'PageView.count' do
+      get :show, :id => events(:one).to_param
+      assert_response :success
+    end
+  end
+
+  test "should show event and store PageView with user_id" do
+    login_as :quentin
+    assert_difference 'PageView.count' do
+      get :show, :id => events(:one).to_param
+      assert_response :success
+      assert_equal assigns(:page_view).user_id, users(:quentin).id
+    end
   end
 
   test "should get edit" do

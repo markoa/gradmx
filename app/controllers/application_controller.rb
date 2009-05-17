@@ -19,4 +19,9 @@ class ApplicationController < ActionController::Base
     @user = current_user
   end
 
+  def store_page_view(extra_params = {})
+    extra_params[:user_id] = @user.id if @user
+    @page_view = PageView.create(request, extra_params)
+  end
+
 end
