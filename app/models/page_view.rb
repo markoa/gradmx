@@ -54,7 +54,11 @@ class PageView
       @data[text.chop.to_sym] = args.first
     else
       if @data.keys.include?(text)
-        @data[text]
+        if text[-2, 2] == "id"
+          @data[text].to_i
+        else
+          @data[text]
+        end
       else
         super
       end
@@ -89,12 +93,18 @@ class PageView
     @data['request_uri'] = request.request_uri
     @data['remote_ip'] = request.remote_ip
 
-    @data.merge(options)
+    append_to_data(options)
   end
 
   def init_existing(hash)
     @key = hash[:pk]
     @data = Hash.new
+    append_to_data(hash)
+  end
+
+  # Should be used instead of merge, as we must have only strings as keys
+  def append_to_data(hash)
     hash.each { |k, v| @data[k.to_s] = v.to_s }
   end
+
 end
