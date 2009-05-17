@@ -64,5 +64,4 @@ end
 
 # Tokyo Tyrant connections
 # ttserver -port 19850 page_views.tct
-page_views_port = RAILS_ENV == 'test' ? 19851 : 19850
-PageView.table = Rufus::Tokyo::TyrantTable.new('localhost', page_views_port)
+PAGE_VIEWS_PORT = (RAILS_ENV == 'test') ? 19851 : 19850
