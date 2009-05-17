@@ -15,13 +15,14 @@
 #
 class PageView < TokyoRecord
 
-  cattr_accessor :table
+  cattr_accessor :table, :port
   @@table = nil
+  @@port = 19850
 
   # Request may be an ActionController::Request, or a Hash.
   # In the former case, options may include additional data such as event_id.
   def initialize(request, options = {})
-    self.class.init_connection
+    self.class.init_connection(@@port)
 
     if request.is_a?(Hash)
       init_existing(request)
@@ -32,8 +33,10 @@ class PageView < TokyoRecord
 
   class << self # Class methods
 
-    def init_connection
-      self.table = Rufus::Tokyo::TyrantTable.new('localhost', PAGE_VIEWS_PORT) if @@table.nil?
+    # TokyoRecord implementation
+    def init_connection(port = nil)
+      port ||= @@port
+      @@table = Rufus::Tokyo::TyrantTable.new('localhost', port) if @@table.nil?
     end
 
     # TokyoRecord override

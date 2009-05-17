@@ -64,4 +64,5 @@ end
 
 # Tokyo Tyrant connections
 # ttserver -port 19850 page_views.tct
-PAGE_VIEWS_PORT = (RAILS_ENV == 'test') ? 19851 : 19850
+PageView.port = (RAILS_ENV == 'test') ? 19851 : 19850
+PageView.init_connection

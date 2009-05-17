@@ -1,11 +1,24 @@
 class TokyoRecord
 
+  # Raised when the descendant model does not define init_connection
+  # or doesn't set the @@table class variable.
+  class ConnectionError < StandardError
+  end
+
   def initialize
     @data, @key = nil
   end
 
+  def self.init_connection
+    raise ConnectionError, "You need to implement init_connection in your model"
+  end
+
   def table
-    return self.class.table
+    t = self.class.table
+    if t.nil? or not t.is_a?(Rufus::Tokyo::TyrantTable)
+      raise ConnectionError, "No connection to Tokyo Tyrant"
+    end
+    return t
   end
 
   def connected?
