@@ -25,10 +25,18 @@ class TokyoRecord
     !table.nil?
   end
 
+  def new_record?
+    @key.nil?
+  end
+
   def save
-    if @key.nil?
+    time = Time.current.to_s
+    if new_record?
       @key = table.genuid.to_s
+      @data["created_at"] = time
     end
+
+    @data["updated_at"] = time
     table[@key] = @data
   end
 
@@ -70,6 +78,16 @@ class TokyoRecord
       object = new(options)
       object.save
       object
+    end
+
+    def first
+      keys = table.query { |q| q.pk_only }
+      table[keys.first]
+    end
+
+    def last
+      keys = table.query { |q| q.pk_only }
+      table[keys.last]
     end
   end
 
