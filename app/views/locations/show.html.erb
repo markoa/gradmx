@@ -1,7 +1,20 @@
 <%= page_h "#{@location.name}, #{@location.city.name}" %>
 
-<%= @location.description %>
+<%= simple_format @location.description %>
+
+<h4>Events</h4>
+<ul>
+  <% for e in @location.events %>
+  <li>
+    <%= link_to e.title, e %> / <%= e.time_begin.to_s(:long) %>
+  </li>
+  <% end %>
+</ul>
 
 <% content_for :right_column do %>
-  <%= link_to "New event", new_event_path(:location_id => @location) %>
+  <% if logged_in? -%>
+    <p>
+      <%= link_to "New event", new_event_path(:location_id => @location) %>
+    </p>
+  <% end -%>
 <% end %>
