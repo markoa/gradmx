@@ -1,6 +1,7 @@
 .*.swp
 config/config.yml
 config/database.yml
+db/*.tct
 log/*.log
 log/*.log.*
 public/system/*

@@ -19,6 +19,10 @@ class ApplicationController < ActionController::Base
     @user = current_user
   end
 
+  def assure_not_logged_in
+    redirect_back_or_default(root_path) if logged_in?
+  end
+
   def store_page_view(extra_params = {})
     extra_params[:user_id] = @user.id if @user
     @page_view = PageView.create(request, extra_params)

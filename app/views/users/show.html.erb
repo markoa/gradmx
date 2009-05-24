@@ -1,0 +1,13 @@
+<%= page_h @req_user.login %>
+
+<p>
+  <strong>Announced events</strong> <br />
+
+  <ul>
+    <% for e in @req_user.events %>
+    <li>
+    <%= link_to e.title, e %>
+    </li>
+    <% end %>
+  </ul>
+</p>

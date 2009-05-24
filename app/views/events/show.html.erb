@@ -10,17 +10,17 @@
 
 <p>
   <b>Time begin:</b>
-  <%=h @event.time_begin %>
+  <%=h @event.time_begin.to_s(:long) %>
 </p>
 
 <p>
   <b>Time end:</b>
-  <%=h @event.time_end %>
+  <%=h(@event.time_end.to_s(:long)) unless @event.time_end.blank? %>
 </p>
 
 <p>
-  <b>User:</b>
-  <%=h @event.user_id %>
+  <b>Annouced:</b>
+  <%= link_to @event.user.login, user_path(@event.user) %>
 </p>
 
 <p>
@@ -28,6 +28,7 @@
   <%=h @event.location_id %>
 </p>
 
-
-<%= link_to 'Edit', edit_event_path(@event) %> |
-<%= link_to 'Back', events_path %>
+<% if logged_in? %>
+  <%= link_to 'Edit', edit_event_path(@event), :id => 'editEvent' %> |
+<% end -%>
+<%= link_to 'Back to events', events_path %>

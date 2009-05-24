@@ -42,6 +42,7 @@ class EventsControllerTest < ActionController::TestCase
     assert_difference 'PageView.count' do
       get :show, :id => events(:one).to_param
       assert_response :success
+      assert_select '#editEvent', false
     end
   end
 
@@ -51,6 +52,7 @@ class EventsControllerTest < ActionController::TestCase
       get :show, :id => events(:one).to_param
       assert_response :success
       assert_equal assigns(:page_view).user_id, users(:quentin).id
+      assert_select '#editEvent', true
     end
   end
 
