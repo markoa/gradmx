@@ -1,15 +1,16 @@
 
 # PageView always has the following fields:
 #
-# user_id
 # request_uri
-# ip_address
+# remote_ip
 # referer
 # user_agent
 # created_at
+# updated_at
 #
 # and when applicable:
 #
+# user_id
 # event_id
 # location_id
 #
@@ -55,6 +56,8 @@ class PageView < TokyoRecord
 
     @data['request_uri'] = request.request_uri
     @data['remote_ip'] = request.remote_ip
+    @data['referer'] = request.referer || ''
+    @data['user_agent'] = request.user_agent
 
     append_to_data(options)
   end
