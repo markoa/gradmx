@@ -66,3 +66,7 @@ end
 # ttserver -port 19850 page_views.tct
 PageView.port = (RAILS_ENV == 'test') ? 19851 : 19850
 PageView.init_connection
+
+# ttserver -port 19860 presences.tct
+Presence.port = (RAILS_ENV == 'test') ? 19861 : 19860
+Presence.init_connection

@@ -12,6 +12,7 @@
 #
 #  def initialize(options = {})
 #    self.class.init_connection(@@port)
+#    super(options)
 #    # specialized initialization of @key and @data
 #  end
 #
@@ -26,13 +27,17 @@
 #
 class TokyoRecord
 
+  attr_reader :key
+
   # Raised when the descendant model does not define init_connection
   # or doesn't set the @@table class variable.
   class ConnectionError < StandardError
   end
 
-  def initialize
-    @data, @key = nil
+  def initialize(options = {})
+    @data = Hash.new
+    @key = options[:pk] # nil when new record
+    append_to_data(options)
   end
 
   def self.init_connection
@@ -68,6 +73,20 @@ class TokyoRecord
 
   def destroy
     table.delete(@key)
+  end
+
+  # Returns true if the +comparison_object+ is the same object,
+  # or is of the same type and has the same key.
+  def ==(comparison_object)
+    comparison_object.equal?(self) ||
+      (comparison_object.instance_of?(self.class) &&
+       comparison_object.key == key &&
+       !comparison_object.new_record?)
+  end
+
+  # Delegates to ==
+  def eql?(comparison_object)
+    self == (comparison_object)
   end
 
   def method_missing(key, *args)
@@ -108,12 +127,14 @@ class TokyoRecord
 
     def first
       keys = assert_connected(table).query { |q| q.pk_only }
-      table[keys.first]
+      key = keys.first
+      new(table[key].merge(:pk => key))
     end
 
     def last
       keys = assert_connected(table).query { |q| q.pk_only }
-      table[keys.last]
+      key = keys.last
+      new(table[key].merge(:pk => key))
     end
 
     protected
@@ -130,7 +151,7 @@ class TokyoRecord
 
   # Should be used instead of @data.merge, as we must have only strings as keys
   def append_to_data(hash)
-    hash.each { |k, v| @data[k.to_s] = v.to_s }
+    hash.each { |k, v| @data[k.to_s] = v.to_s unless k == :pk }
   end
 
 end
