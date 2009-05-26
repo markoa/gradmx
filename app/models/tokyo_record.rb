@@ -1,3 +1,29 @@
+
+# TokyoRecord is a base class wrapping Tokyo Tyrant tables in an API that
+# feels like ActiveRecord.
+#
+# A minimal implementation looks like this:
+#
+# class Presence < TokyoRecord
+#
+#  cattr_accessor :table, :port
+#  @@table = nil
+#  @@port = 12345
+#
+#  def initialize(options = {})
+#    self.class.init_connection(@@port)
+#    # specialized initialization of @key and @data
+#  end
+#
+#  class << self # Class methods
+#    def init_connection(port = nil)
+#      port ||= @@port
+#      @@table = Rufus::Tokyo::TyrantTable.new('localhost', port) if @@table.nil?
+#    end
+#  end
+#
+# end
+#
 class TokyoRecord
 
   # Raised when the descendant model does not define init_connection
@@ -64,14 +90,14 @@ class TokyoRecord
 
   class << self # Class methods
     def all
-      records = table.query { |q| }
+      records = assert_connected(table).query { |q| }
       objects = []
       records.each { |r| objects << new(r) }
       objects
     end
 
     def count
-      table.size
+      assert_connected(table).size
     end
 
     def create(request, options = {})
@@ -81,13 +107,22 @@ class TokyoRecord
     end
 
     def first
-      keys = table.query { |q| q.pk_only }
+      keys = assert_connected(table).query { |q| q.pk_only }
       table[keys.first]
     end
 
     def last
-      keys = table.query { |q| q.pk_only }
+      keys = assert_connected(table).query { |q| q.pk_only }
       table[keys.last]
+    end
+
+    protected
+
+    def assert_connected(t)
+      if t.nil? or not t.is_a?(Rufus::Tokyo::TyrantTable)
+        raise ConnectionError, "No connection to Tokyo Tyrant"
+      end
+      return t
     end
   end
 

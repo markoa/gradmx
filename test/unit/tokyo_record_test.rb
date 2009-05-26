@@ -13,5 +13,9 @@ class T < Test::Unit::TestCase
     assert_raise(TokyoRecord::ConnectionError) do
       Lazy.init_connection
     end
+
+    assert_raise(TokyoRecord::ConnectionError) do
+      Lazy.count
+    end
   end
 end
