@@ -68,4 +68,8 @@ class User < ActiveRecord::Base
     end
   end
 
+  def presences
+    Presence.query { |q| q.add 'user_id', :equals, self.id.to_s }
+  end
+
 end

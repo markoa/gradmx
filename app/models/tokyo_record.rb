@@ -30,7 +30,7 @@ class TokyoRecord
   attr_reader :key
 
   # Raised when the descendant model does not define init_connection
-  # or doesn't set the @@table class variable.
+  # or doesn't initialize the @@table class variable with a working connection.
   class ConnectionError < StandardError
   end
 
@@ -135,6 +135,15 @@ class TokyoRecord
       keys = assert_connected(table).query { |q| q.pk_only }
       key = keys.last
       new(table[key].merge(:pk => key))
+    end
+
+    # Prepares and runs a query from the given block, returns an array
+    # of Ruby objects. Block is expected to work with Rufus::Tokyo::TableQuery
+    def query(&block)
+      items = assert_connected(table).query(&block)
+      results = []
+      items.each { |i| results << new(i) }
+      results
     end
 
     protected

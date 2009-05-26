@@ -23,4 +23,8 @@ class Event < ActiveRecord::Base
     end
   end
 
+  def presences
+    Presence.query { |q| q.add 'event_id', :equals, self.id.to_s }
+  end
+
 end

@@ -13,6 +13,12 @@ class PresenceTest < ActiveSupport::TestCase
       assert_equal p.user_id, 1
       assert_equal p.event_id, 1
       assert_equal Presence.last, p
+
+      assert users(:quentin).presences
+      assert users(:quentin).presences.include?(p)
+
+      assert events(:one).presences
+      assert events(:one).presences.include?(p)
     end
   end
 
