@@ -18,4 +18,12 @@ class Presence < TokyoRecord
     end
   end
 
+  def user
+    User.find(self.user_id)
+  end
+
+  def event
+    Event.find(self.event_id)
+  end
+
 end

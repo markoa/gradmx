@@ -6,7 +6,7 @@ ActionController::Routing::Routes.draw do |map|
   map.signup '/signup', :controller => 'users', :action => 'new'
 
   map.resources :users
-  map.resources :events
+  map.resources :events, :has_many => :presences
   map.resources :locations, :collection => {
     :autocomplete_for_location_name => :get
   }

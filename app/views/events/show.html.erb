@@ -31,4 +31,26 @@
 <% if logged_in? %>
   <%= link_to 'Edit', edit_event_path(@event), :id => 'editEvent' %> |
 <% end -%>
+
 <%= link_to 'Back to events', events_path %>
+
+<% content_for :right_column do %>
+  <h3>People attending</h3>
+
+  <% if logged_in? -%>
+    <% if @presence -%>
+      You are in.
+      <%= link_to("Cancel?", event_presence_path(@event, @presence.key), :method => :delete) %>
+    <% else -%>
+      <%= link_to("Are you in?", event_presences_path(@event), :method => :post) %>
+    <% end -%>
+  <% end -%>
+
+  <ul>
+    <% for presence in @event.presences %>
+    <li>
+      <%= link_to(presence.user.login, presence.user) %>
+    </li>
+    <% end %>
+  </ul>
+<% end %>

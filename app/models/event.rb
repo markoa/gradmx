@@ -9,6 +9,7 @@ class Event < ActiveRecord::Base
 
   autocomplete_for 'location', 'name' # adds auto_location_name=
 
+  # Read by will_paginate
   def self.per_page
     10
   end

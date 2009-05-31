@@ -146,6 +146,12 @@ class TokyoRecord
       results
     end
 
+    def find_by_key(key)
+      result = assert_connected(table)[key]
+      return nil if result.nil?
+      return new(result.merge(:pk => key))
+    end
+
     protected
 
     def assert_connected(t)

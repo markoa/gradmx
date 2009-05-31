@@ -21,8 +21,22 @@ class EventsController < ApplicationController
   # GET /events/1
   # GET /events/1.xml
   def show
+    # Necessary to reinit connection to Tyrant in development mode.
+    # Otherwise, @event.presence would raise.
+    # TODO: is there another way?
+    Presence.new
+
     @event = Event.find(params[:id])
     store_page_view(:event_id => @event.id)
+
+    if logged_in?
+      attending_results = Presence.query do |q|
+        q.add "user_id", :eq, @user.id.to_s
+        q.add "event_id", :eq, @event.id.to_s
+      end
+
+      @presence = attending_results.empty? ? nil : attending_results.first
+    end
 
     respond_to do |format|
       format.html # show.html.erb
