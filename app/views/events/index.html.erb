@@ -1,4 +1,4 @@
-<%= page_h "Events" %>
+<%= page_h t('general.events_h') %>
 
 <ul>
 <% @events.each do |event| %>
@@ -12,15 +12,15 @@
 
 <br />
 
-<%= link_to 'New event', new_event_path %>
+<%= link_to(t('events.new_event'), new_event_path) %>
 
 <% content_for :right_column do %>
-  <h3>Locations</h3>
+  <h3><%= t('general.locations_h') %></h3>
   <ul>
     <% for loc in @locations.reverse %>
       <li><%= link_to loc.name, loc %></li>
     <% end %>
   </ul>
 
-  <%= link_to "See all", locations_path %>
+  <%= link_to(t('general.see_all'), locations_path) %>
 <% end %>

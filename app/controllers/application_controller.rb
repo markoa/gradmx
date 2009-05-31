@@ -21,6 +21,14 @@ class ApplicationController < ActionController::Base
 
   def set_locale
     I18n.locale = session[:locale] || :"sr-Latn"
+
+    # Putting this inside an initializer file would always show them in
+    # the default locale and would not honor the requested
+    WillPaginate::ViewHelpers.pagination_options[:previous_label] =
+      I18n.t('general.previous_page')
+
+    WillPaginate::ViewHelpers.pagination_options[:next_label] =
+      I18n.t('general.next_page')
   end
 
   def assure_not_logged_in

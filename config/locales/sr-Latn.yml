@@ -20,7 +20,7 @@
       default: "%a %b %d %H:%M:%S %Z %Y"
       time: "%H:%M"
       short: "%d %b %H:%M"
-      long: "%d %B %Y %H:%M"
+      long: "%d. %B %Y. %H:%M"
       only_second: "%S"
 
       datetime:

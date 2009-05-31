@@ -124,6 +124,10 @@ h3 {
 
 .col{ }
 
+.pagination {
+  font-size: 75%;
+}
+
 /* forms */
 
 .ctrlHolder {

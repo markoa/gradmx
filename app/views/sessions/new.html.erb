@@ -6,26 +6,26 @@
   </script>
 <% end %>
 
-<%= page_h("Log In") %>
+<%= page_h(t('home.login')) %>
 
 <% form_tag session_path, :id => 'loginForm' do -%>
 
   <div class="ctrlHolder">
-    <%= label_tag 'login' %> <br />
+    <%= label_tag 'login', t('home.login_name') %> <br />
     <%= text_field_tag 'login', @login %>
   </div>
 
   <div class="ctrlHolder">
-    <%= label_tag 'password' %><br/>
+    <%= label_tag 'password', t('home.password') %><br/>
     <%= password_field_tag 'password', nil %>
   </div>
 
   <div class="ctrlHolder">
-    <%= label_tag 'remember_me', 'Remember me' %>
+    <%= label_tag 'remember_me', t('home.remember_me') %>
     <%= check_box_tag 'remember_me', '1', @remember_me %>
   </div>
 
   <div class="ctrlHolder">
-    <%= submit_tag 'Log in' %>
+    <%= submit_tag t('home.log_me_in') %>
   </div>
 <% end -%>

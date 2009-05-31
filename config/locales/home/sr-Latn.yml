@@ -1,0 +1,10 @@
+"sr-Latn":
+  home:
+    view_events: Prikaži sve događaje
+    login: Uloguj se
+    signup: učlani
+
+    login_name: Korisničko ime
+    password: Šifra
+    remember_me: Zapamti me
+    log_me_in: Pusti me unutra

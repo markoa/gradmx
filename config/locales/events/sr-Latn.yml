@@ -1,2 +1,4 @@
 "sr-Latn":
-  time_begin: Početak
+  events:
+    new_event: Objavi novi događaj
+    time_begin: Početak
