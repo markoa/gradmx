@@ -20,11 +20,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale
-    if session[:locale] and I18n.available_locales.include?(session[:locale].to_sym)
-      I18n.locale = session[:locale]
-    else
-      I18n.locale = :"sr-Latn"
-    end
+    I18n.locale = session[:locale] || :"sr-Latn"
   end
 
   def assure_not_logged_in
