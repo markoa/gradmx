@@ -9,8 +9,8 @@
 </p>
 
 <p>
-  <b>Time begin:</b>
-  <%=h @event.time_begin.to_s(:long) %>
+  <b><%=t 'time_begin' %>:</b>
+  <%=l @event.time_begin, :format => :long %>
 </p>
 
 <p>
