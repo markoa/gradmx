@@ -146,6 +146,8 @@ class TokyoRecord
       results
     end
 
+    # Returns an object for the record with given key, or nil if it cannot
+    # be found.
     def find_by_key(key)
       result = assert_connected(table)[key]
       return nil if result.nil?
