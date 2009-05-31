@@ -19,7 +19,7 @@
   <div id="header">
     <h1>
       <strong><%= link_to "gradmx", root_path %></strong>
-      <em><%= flash[:notice] %></em>
+      <em><%= flash[:error] or flash[:notice] %></em>
     </h1>
   </div>
 
