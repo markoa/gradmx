@@ -119,7 +119,7 @@ class TokyoRecord
       assert_connected(table).size
     end
 
-    def create(request, options = {})
+    def create(options = {})
       object = new(options)
       object.save
       object
