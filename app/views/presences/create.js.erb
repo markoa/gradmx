@@ -3,7 +3,10 @@
     "<%= escape_javascript(render(:partial => 'events/presence_destroy')) %>"
   );
 
-  $("#peopleAttending").append('<li> <%= link_to(@user.login, @user) %> </li>');
+  var presenceId = '<%= "presence#{@presence.key}" %>';
+  $("#peopleAttending").append(
+    '<li id="' + presenceId + '"> <%= link_to(@user.login, @user) %> </li>'
+  );
 
   $("#flash").text("You have announced your presence");
 <% else %>
