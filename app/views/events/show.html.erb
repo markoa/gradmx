@@ -1,3 +1,17 @@
+<% content_for :head do %>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $("a#createPresence").attr('href', "javascript:void(0);");
+
+      $("a#createPresence").click(function() {
+        var path = '<%= event_presences_path(@event) %>' + '.js';
+        $.post(path, { event_id: '<%= @event.id %>' }, null, 'script');
+        return false;
+      });
+    });
+  </script>
+<% end %>
+
 <p>
   <b>Title:</b>
   <%=h @event.title %>
@@ -38,17 +52,18 @@
   <h3>People attending</h3>
 
   <% if logged_in? -%>
-    <% if @presence -%>
-      You are in.
-      <%= link_to("Cancel?", event_presence_path(@event, @presence.key), :method => :delete) %>
-    <% else -%>
-      <%= link_to("Are you in?", event_presences_path(@event), :method => :post) %>
-    <% end -%>
+    <div id="presenceInput">
+      <% if @presence -%>
+        <%= render :partial => 'presence_destroy' %>
+      <% else -%>
+        <%= render :partial => 'presence_create' %>
+      <% end -%>
+    </div>
   <% end -%>
 
-  <ul>
+  <ul id="peopleAttending">
     <% for presence in @event.presences %>
-    <li>
+    <li id='<%= "presence#{presence.key}" %>'>
       <%= link_to(presence.user.login, presence.user) %>
     </li>
     <% end %>

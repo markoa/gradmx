@@ -1,0 +1,11 @@
+<% if @presence %>
+  $("#presenceInput").replaceWith(
+    "<%= escape_javascript(render(:partial => 'events/presence_destroy')) %>"
+  );
+
+  $("#peopleAttending").append('<li> <%= link_to(@user.login, @user) %> </li>');
+
+  $("#flash").text("You have announced your presence");
+<% else %>
+  $("#flash").text("You have already announced your presence");
+<% end %>

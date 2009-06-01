@@ -11,12 +11,24 @@ class PresencesController < ApplicationController
 
     if existing.empty?
       @presence = Presence.create(:event_id => @event.id, :user_id => @user.id)
-      flash[:notice] = "You have announced your presence"
-    else
-      flash[:notice] = "You have already announced your presence"
-    end
+      respond_to do |format|
+        format.html do
+          flash[:notice] = "You have announced your presence"
+          redirect_to(@event)
+        end
 
-    redirect_to(@event)
+        format.js # create.js.erb
+      end
+    else
+      respond_to do |format|
+        format.html do
+          flash[:notice] = "You have already announced your presence"
+          redirect_to(@event)
+        end
+
+        format.js
+      end
+    end
   end
 
   # DELETE /events/1/presences/2
