@@ -1,9 +1,10 @@
-<p>
-  <%= link_to(t('home.view_events'), events_path) %>
-</p>
-<p>
 <% if logged_in? -%>
-  <%= link_to "Log out", logout_path %>
+  <strong>
+    Hi <%= @user.login %>!
+  </strong>
+  <small>
+    <%= link_to "Log out", logout_path %>
+  </small>
 
   <h2>Highlights</h2>
   <ul>
@@ -13,9 +14,16 @@
     </li>
     <% end %>
   </ul>
+
+  <%= link_to(t('home.view_events'), events_path) %>
 <% else -%>
-  <%= link_to t('home.login'), login_path %>
-  <%= t 'general.or' %>
-  <%= link_to t('home.signup'), signup_path %>
+  <p>
+    <%= link_to t('home.login'), login_path %>
+    <%= t 'general.or' %>
+    <%= link_to t('home.signup'), signup_path %>
+  </p>
+
+  <p>
+    <%= link_to(t('home.view_events'), events_path) %>
+  </p>
 <% end -%>
-</p>
