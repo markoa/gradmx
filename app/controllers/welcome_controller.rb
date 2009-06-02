@@ -1,7 +1,9 @@
 class WelcomeController < ApplicationController
 
   def index
-    redirect_to events_path if logged_in?
+    if logged_in?
+      @highlights = Event.highlights
+    end
   end
 
 end

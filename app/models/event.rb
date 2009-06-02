@@ -14,6 +14,19 @@ class Event < ActiveRecord::Base
     10
   end
 
+  def self.upcoming
+    find(:all, :conditions => ["time_begin >= ?", Time.now.utc])
+  end
+
+  def self.highlights
+    events = []
+    ::Highlights.new
+    for k in Highlights.table.keys(:prefix => "event").reverse[0..9].reverse
+      events << Event.find(Highlights.table[k]["id"].to_i)
+    end
+    events
+  end
+
   def validate
     if not time_end.blank? and not time_begin.blank? and time_end <= time_begin
       errors.add("time_end", "must be after the beginning time")

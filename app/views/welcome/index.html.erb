@@ -4,6 +4,15 @@
 <p>
 <% if logged_in? -%>
   <%= link_to "Log out", logout_path %>
+
+  <h2>Highlights</h2>
+  <ul>
+    <% for e in @highlights %>
+    <li>
+      <%= link_to(e.title, e) %>
+    </li>
+    <% end %>
+  </ul>
 <% else -%>
   <%= link_to t('home.login'), login_path %>
   <%= t 'general.or' %>

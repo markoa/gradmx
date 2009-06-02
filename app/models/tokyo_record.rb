@@ -154,6 +154,11 @@ class TokyoRecord
       return new(result.merge(:pk => key))
     end
 
+    def new_key_for_prefix(prefix)
+      uid = assert_connected(table).genuid
+      "#{prefix}#{uid}"
+    end
+
     protected
 
     def assert_connected(t)
