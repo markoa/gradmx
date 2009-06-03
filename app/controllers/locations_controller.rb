@@ -7,6 +7,22 @@ class LocationsController < ApplicationController
     locations.map { |loc| "#{loc.name}|#{loc.city.name}|#{loc.id}" }.join("\n")
   end
 
+  # GET /locations
+  # GET /locations.xml
+  def index
+    store_page_view
+    respond_to do |format|
+      format.html { # index.html.erb
+        @locations = Location.paginate(:page => params[:page],
+                                       :order => 'name ASC')
+      }
+      format.xml  {
+        @locations = Location.all(:order => 'name ASC')
+        render :xml => @locations
+      }
+    end
+  end
+
   # GET /locations/new
   # GET /locations/new.xml
   def new

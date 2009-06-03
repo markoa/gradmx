@@ -17,6 +17,11 @@ class Location < ActiveRecord::Base
     loc.validate_city
   end
 
+  # Read by will_paginate
+  def self.per_page
+    20
+  end
+
   def self.recent(limit = 5)
     find(:all, :limit => limit, :order => "created_at DESC")
   end

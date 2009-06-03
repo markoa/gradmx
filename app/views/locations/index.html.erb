@@ -1,0 +1,10 @@
+<%= page_h t('general.locations_h') %>
+
+<ul>
+<% @locations.each do |loc| %>
+  <li>
+    <%=link_to(h(loc.name) + ", " + loc.city.name, loc) %>
+  </li>
+<% end %>
+</ul>
+<%= will_paginate @locations %>
