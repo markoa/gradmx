@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 6) do
+ActiveRecord::Schema.define(:version => 7) do
 
   create_table "cities", :force => true do |t|
     t.string   "name"
@@ -20,6 +20,14 @@ ActiveRecord::Schema.define(:version => 6) do
   end
 
   add_index "cities", ["code"], :name => "index_cities_on_code", :unique => true
+
+  create_table "comments", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "event_id"
+    t.text     "body"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "events", :force => true do |t|
     t.string   "title"

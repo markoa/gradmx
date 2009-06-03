@@ -72,5 +72,7 @@ Presence.port = (RAILS_ENV == 'test') ? 19861 : 19860
 Presence.init_connection
 
 # ttserver -port 19870 highlights.tct
-Highlights.port = (RAILS_ENV == 'test') ? 19871 : 19870
-Highlights.init_connection
+if RAILS_ENV != 'test'
+  Highlights.port = 19870
+  Highlights.init_connection
+end

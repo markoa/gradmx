@@ -3,6 +3,8 @@ class Event < ActiveRecord::Base
   belongs_to :location
   belongs_to :user # publisher
 
+  has_many :comments
+
   validates_presence_of :title
   validates_presence_of :time_begin
   validates_presence_of :location
