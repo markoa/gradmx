@@ -12,7 +12,11 @@
 
 <br />
 
-<%= link_to(t('events.new_event'), new_event_path) %>
+<% if logged_in? -%>
+  <%= link_to(t('events.new_event'), new_event_path) %>
+<% else -%>
+  <%= link_to("Log in", login_path) %>  to announce a new event.
+<% end -%>
 
 <% content_for :right_column do %>
   <h3><%= t('general.locations_h') %></h3>

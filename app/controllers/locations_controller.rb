@@ -1,6 +1,6 @@
 class LocationsController < ApplicationController
 
-  before_filter :login_required, :except => 'show'
+  before_filter :login_required, :except => ['index', 'show']
   before_filter :find_location, :only => ['edit', 'update', 'destroy', 'show']
 
   autocomplete_for :location, :name do |locations|
