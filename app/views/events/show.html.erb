@@ -24,7 +24,7 @@
     – <%= h(@event.time_end.to_s(:long)) %>
   <% end -%>
 
-  // annouced by
+  // announced by
   <%= link_to @event.user.login, user_path(@event.user) %>
 </p>
 
@@ -35,12 +35,30 @@
 
 <%= simple_format(@event.description, :class => 'description') %>
 
+<h4>Comments <%= "(#{@event.comments.count})" if @event.comments.count > 0 %> </h4>
+
+<%= error_messages_for :comment %>
+<% if logged_in? %>
+  <% form_for [@event, @comment] do |f| %>
+    <%= f.text_area :body, :size => '60x2' %> <br />
+    <%= f.submit "Say so" %>
+  <% end %>
+<% end %>
+
+<ul>
+  <% for c in @event.comments.reverse %>
+  <li>
+    <%= h(c.body) %> // <%= link_to(c.user.login, c.user) %>,
+    <%= l(c.created_at, :format => :long) %>
+  </li>
+  <% end %>
+</ul>
 
 <% if logged_in? %>
-  <%= link_to 'Edit', edit_event_path(@event), :id => 'editEvent' %> |
+  <%= link_to "Edit event information", edit_event_path(@event), :id => 'editEvent' %> |
 <% end -%>
 
-<%= link_to 'Back to events', events_path %>
+<%= link_to "Back to all events", events_path %>
 
 <% content_for :right_column do %>
   <h3>People attending</h3>

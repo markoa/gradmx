@@ -30,6 +30,8 @@ class EventsController < ApplicationController
     store_page_view(:event_id => @event.id)
 
     if logged_in?
+      @comment = Comment.new
+
       attending_results = Presence.query do |q|
         q.add "user_id", :eq, @user.id.to_s
         q.add "event_id", :eq, @event.id.to_s
