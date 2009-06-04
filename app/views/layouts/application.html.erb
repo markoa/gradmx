@@ -14,6 +14,8 @@
   <%= javascript_include_tag 'jquery-1.3.2.min', 'application.js' %>
   <%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery? %>
 
+  <%= auto_discovery_link_tag :atom, events_url(:format => :atom), :title => "Event Feed"  %>
+
   <%= yield :head %>
 </head>
 <body>

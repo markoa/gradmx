@@ -4,6 +4,7 @@ class EventsController < ApplicationController
 
   # GET /events
   # GET /events.xml
+  # GET /events.atom
   def index
     store_page_view
     respond_to do |format|
@@ -14,6 +15,10 @@ class EventsController < ApplicationController
       format.xml  {
         @events = Event.all
         render :xml => @events
+      }
+
+      format.atom {
+        @events = Event.all(:limit => 100)
       }
     end
   end

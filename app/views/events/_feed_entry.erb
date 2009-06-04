@@ -1,0 +1,17 @@
+<%- #event -%>
+
+<%= link_to(event.location.name, location_url(event.location)) %>,
+<%= event.location.city.name %>
+<br />
+
+<%= Date::DAYNAMES[event.time_begin.to_date.wday] %>
+<%= event.time_begin.to_date.to_s(:short) %>
+<%= event.time_begin.time.to_s(:time) %>
+<%- unless event.time_end.blank? -%>
+  - <%= event.time_end.to_date.to_s(:short) %>
+  <%= event.time_end.time.to_s(:time) %>
+<%- end -%>
+
+<br /> <br />
+
+<%= simple_format event.description %>
