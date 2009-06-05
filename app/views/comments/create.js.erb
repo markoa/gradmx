@@ -1,0 +1,13 @@
+<% if @success %>
+  $("#comments").prepend(
+    '<%= escape_javascript(render(:partial => @comment)) %>');
+
+  $("#new_comment textarea").focus().val("");
+
+  $("#commentCount").text("(<%= @event.comments.count %>)");
+
+<% else %>
+  $("#new_comment textarea").focus();
+<% end %>
+
+$("#flash").text("<%= @msg %>");

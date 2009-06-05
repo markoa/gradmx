@@ -1,0 +1,5 @@
+<li>
+  <%= h(comment.body) %> // <%= link_to(comment.user.login, comment.user) %>,
+  <%= l(comment.created_at, :format => :long) %>
+</li>
+

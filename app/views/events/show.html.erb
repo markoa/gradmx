@@ -8,13 +8,18 @@
         $.post(path, { event_id: '<%= @event.id %>' }, null, 'script');
         return false;
       });
+
+      $("#new_comment").submit(function() {
+        $.post($(this).attr('action') + '.js',
+               $(this).serializeArray(),
+               null, 'script');
+        return false;
+      });
     });
   </script>
 <% end %>
 
-<h2>
-  <%=h @event.title %>
-</h2>
+<%=page_h @event.title %>
 
 <p>
   <strong><%=t('events.time_begin') %>:</strong>
@@ -35,7 +40,12 @@
 
 <%= simple_format(@event.description, :class => 'description') %>
 
-<h4>Comments <%= "(#{@event.comments.count})" if @event.comments.count > 0 %> </h4>
+<h4>
+  Comments
+  <span id="commentCount">
+    <%= "(#{@event.comments.count})" if @event.comments.count > 0 %>
+  </span>
+</h4>
 
 <%= error_messages_for :comment %>
 <% if logged_in? %>
@@ -45,13 +55,8 @@
   <% end %>
 <% end %>
 
-<ul>
-  <% for c in @event.comments.reverse %>
-  <li>
-    <%= h(c.body) %> // <%= link_to(c.user.login, c.user) %>,
-    <%= l(c.created_at, :format => :long) %>
-  </li>
-  <% end %>
+<ul id="comments">
+  <%= render :partial => 'comments/comment', :collection => @event.comments.reverse %>
 </ul>
 
 <% if logged_in? %>

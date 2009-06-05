@@ -9,12 +9,21 @@ class CommentsController < ApplicationController
 
   def create
     @comment = @user.comments.build(params[:comment].merge(:event_id => @event.id))
-    if @comment.save
-      flash[:notice] = "Your comment has been published"
+    @success = @comment.save
+    if @success
+      @msg = "Your comment has been published"
     else
-      flash[:notice] = "Could not save that comment"
+      @msg = "Could not save that comment"
     end
-    redirect_to @event
+
+    respond_to do |format|
+      format.html do
+        flash[:notice] = @msg
+        redirect_to @event
+      end
+
+      format.js
+    end
   end
 
   def destroy

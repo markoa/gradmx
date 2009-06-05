@@ -18,6 +18,15 @@ class CommentsControllerTest < ActionController::TestCase
     end
   end
 
+  test "should ajax create a new comment" do
+    login_as :quentin
+    assert_difference('Comment.count') do
+      xhr_create_comment
+      assert_equal assigns(:comment).user, users(:quentin)
+      assert_response :success
+    end
+  end
+
   test "should not create a new comment with blank bodu" do
     login_as :quentin
     assert_no_difference('Comment.count') do
@@ -26,10 +35,24 @@ class CommentsControllerTest < ActionController::TestCase
     end
   end
 
+  test "should not ajax create a new comment with blank bodu" do
+    login_as :quentin
+    assert_no_difference('Comment.count') do
+      xhr_create_comment(:body => nil)
+      assert_response :success
+    end
+  end
+
   protected
 
   def create_comment(options = {})
     post :create, :event_id => events(:one), :comment => {
+      :body => "something witty"
+    }.merge(options)
+  end
+
+  def xhr_create_comment(options = {})
+    xhr :post, :create, :event_id => events(:one), :comment => {
       :body => "something witty"
     }.merge(options)
   end
