@@ -9,7 +9,8 @@ class EventsController < ApplicationController
     store_page_view
     respond_to do |format|
       format.html { # index.html.erb
-        @events = Event.paginate(:page => params[:page])
+        @events = Event.paginate(:page => params[:page],
+                                 :order => 'created_at DESC')
         @locations = Location.recent
       }
       format.xml  {
