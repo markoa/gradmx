@@ -52,7 +52,7 @@
 <% if logged_in? %>
   <% form_for [@event, @comment] do |f| %>
     <%= f.text_area :body, :size => '60x2' %> <br />
-    <%= f.submit "Say so" %>
+    <%= f.submit t('events.say_comment') %>
   <% end %>
 <% end %>
 
@@ -61,7 +61,7 @@
 </ul>
 
 <% if logged_in? %>
-  <%= link_to "Edit event information", edit_event_path(@event), :id => 'editEvent' %> |
+  <%= link_to(t('events.edit_info'), edit_event_path(@event), :id => 'editEvent') %> |
 <% end -%>
 
 <%= link_to(t('events.back_to_all'), events_path) %>

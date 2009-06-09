@@ -8,5 +8,10 @@
     time_begin: Početak
     location: Mesto
     comments: Komentari
+    say_comment: Reci
+    edit_info: Izmeni informacije o događaju
     back_to_all: Nazad na sve događaje
     people_attending: Ko ide
+    are_you_going: Ideš?
+    you_are_in: Ideš
+    cancel_presence: Otkaz
