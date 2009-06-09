@@ -1,4 +1,4 @@
-<%= page_h "Sign up as a new user" %>
+<%= page_h t('home.sign_up_as_new_user') %>
 
 <% @user.password = @user.password_confirmation = nil %>
 
@@ -6,7 +6,7 @@
 
 <% form_for :user, :url => users_path do |f| -%>
   <div class="ctrlHolder">
-    <%= label_tag 'login' %><br/>
+    <%= label_tag 'login', t('home.login_name') %><br/>
     <%= f.text_field :login %>
   </div>
 
@@ -17,23 +17,27 @@
 
   <% fields_for 'user[city_attributes]', @user.city do |c| %>
     <div class="ctrlHolder">
-      <label for="user_city_attributes_name">City</label> <br />
+      <label for="user_city_attributes_name">
+        <%= t('home.city') %>
+      </label> <br />
       <%= c.text_field :name %>
     </div>
 
     <div class="ctrlHolder">
-      <label for="user_city_attributes_country_name">Country</label> <br />
+      <label for="user_city_attributes_country_name">
+        <%= t('home.country') %>
+      </label> <br />
       <%= c.country_select :country_name %>
     </div>
   <% end -%>
 
   <div class="ctrlHolder">
-    <%= label_tag 'password' %><br/>
+    <%= label_tag 'password', t('home.password') %><br/>
     <%= f.password_field :password %>
   </div>
 
   <div class="ctrlHolder">
-    <%= label_tag 'password_confirmation', 'Confirm Password' %><br/>
+    <%= label_tag 'password_confirmation', t('home.confirm_password') %><br/>
     <%= f.password_field :password_confirmation %>
   </div>
 

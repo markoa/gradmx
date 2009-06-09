@@ -4,7 +4,13 @@
     login: Uloguj se
     signup: učlani
 
+    # shared between login and signup
     login_name: Korisničko ime
     password: Šifra
     remember_me: Zapamti me
     log_me_in: Pusti me unutra
+
+    sign_up_as_new_user: Postani član
+    city: Grad
+    country: Država
+    confirm_password: Potvrdi šifru
