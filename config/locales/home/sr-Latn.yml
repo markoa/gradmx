@@ -3,6 +3,10 @@
     view_events: Prikaži sve događaje
     login: Uloguj se
     signup: učlani
+    log_out: Izloguj se
+    highlights: Odabrani događaji
+
+    hi: Ćao
 
     # shared between login and signup
     login_name: Korisničko ime
@@ -14,3 +18,4 @@
     city: Grad
     country: Država
     confirm_password: Potvrdi šifru
+    sign_up_button: Učlani me

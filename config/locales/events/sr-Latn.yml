@@ -1,4 +1,12 @@
 "sr-Latn":
   events:
     new_event: Objavi novi događaj
+
+    to_announce_new: da objaviš nešto novo
+
+    announced_by: kaže nam
     time_begin: Početak
+    location: Mesto
+    comments: Komentari
+    back_to_all: Nazad na sve događaje
+    people_attending: Ko ide

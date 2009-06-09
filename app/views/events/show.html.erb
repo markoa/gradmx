@@ -29,19 +29,20 @@
     – <%= h(@event.time_end.to_s(:long)) %>
   <% end -%>
 
-  // announced by
+  // <%= t('events.announced_by') %>
   <%= link_to @event.user.login, user_path(@event.user) %>
 </p>
 
 <p>
-  <b>Location:</b>
-  <%= link_to h(@event.location.name), @event.location %>
+  <b><%= t('events.location') %>:</b>
+  <%= link_to h(@event.location.name), @event.location %>,
+  <%= @event.location.city.name %>
 </p>
 
 <%= simple_format(@event.description, :class => 'description') %>
 
 <h4>
-  Comments
+  <%= t('events.comments') %>
   <span id="commentCount">
     <%= "(#{@event.comments.count})" if @event.comments.count > 0 %>
   </span>
@@ -63,10 +64,10 @@
   <%= link_to "Edit event information", edit_event_path(@event), :id => 'editEvent' %> |
 <% end -%>
 
-<%= link_to "Back to all events", events_path %>
+<%= link_to(t('events.back_to_all'), events_path) %>
 
 <% content_for :right_column do %>
-  <h3>People attending</h3>
+  <h3><%= t('events.people_attending') %></h3>
 
   <% if logged_in? -%>
     <div id="presenceInput">

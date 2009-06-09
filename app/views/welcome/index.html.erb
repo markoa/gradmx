@@ -1,12 +1,12 @@
 <% if logged_in? -%>
   <strong>
-    Hi <%= @user.login %>!
+    <%= t('home.hi') %> <%= @user.login %>!
   </strong>
   <small>
-    <%= link_to "Log out", logout_path %>
+    <%= link_to(t('home.log_out'), logout_path) %>
   </small>
 
-  <h2>Highlights</h2>
+  <h2><%= t('home.highlights') %></h2>
   <ul>
     <% for e in @highlights %>
     <li>

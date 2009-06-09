@@ -15,7 +15,8 @@
 <% if logged_in? -%>
   <%= link_to(t('events.new_event'), new_event_path) %>
 <% else -%>
-  <%= link_to("Log in", login_path) %>  to announce a new event.
+  <%= link_to(t('home.login'), login_path) %>
+  <%= t('events.to_announce_new') %>.
 <% end -%>
 
 <% content_for :right_column do %>
