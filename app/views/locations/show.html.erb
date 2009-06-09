@@ -2,7 +2,7 @@
 
 <%= simple_format @location.description %>
 
-<h4>Events</h4>
+<h4><%= t('general.events_h') %></h4>
 <ul>
   <% for e in @location.events %>
   <li>
@@ -14,7 +14,7 @@
 <% content_for :right_column do %>
   <% if logged_in? -%>
     <p>
-      <%= link_to "New event", new_event_path(:location_id => @location) %>
+      <%= link_to(t('events.new'), new_event_path(:location_id => @location)) %>
     </p>
   <% end -%>
 <% end %>
