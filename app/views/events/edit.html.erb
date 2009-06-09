@@ -1,6 +1,6 @@
-<%= page_h "Edit #{@event.title}" %>
+<%= page_h "#{t('events.edit')} #{@event.title}" %>
 
 <%= render :partial => 'form' %>
 
-<%= link_to 'Show', @event %> |
-<%= link_to 'Back', events_path %>
+<%= link_to(t('general.show'), @event) %> |
+<%= link_to(t('event.back_to_all'), events_path) %>

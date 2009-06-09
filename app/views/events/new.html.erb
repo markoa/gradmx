@@ -1,5 +1,5 @@
-<%= page_h "New event" %>
+<%= page_h t('events.new') %>
 
 <%= render :partial => 'form' %>
 
-<%= link_to 'Back', events_path %>
+<%= link_to(t('events.back_to_all'), events_path) %>
