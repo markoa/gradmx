@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale
-    I18n.locale = session[:locale] || :"sr-Latn"
+    I18n.locale = session[:locale].to_sym || :"sr-Latn"
 
     # Putting this inside an initializer file would always show them in
     # the default locale and would not honor the requested
@@ -37,7 +37,8 @@ class ApplicationController < ActionController::Base
 
   def store_page_view(extra_params = {})
     extra_params[:user_id] = @user.id if @user
-    @page_view = PageView.create(request, extra_params)
+    @page_view = PageView.new(request, extra_params)
+    @page_view.save
   end
 
 end

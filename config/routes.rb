@@ -4,6 +4,7 @@ ActionController::Routing::Routes.draw do |map|
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.register '/register', :controller => 'users', :action => 'create'
   map.signup '/signup', :controller => 'users', :action => 'new'
+  map.change_language '/change-language', :controller => 'welcome', :action => 'change_language'
 
   map.resources :users
   map.resources :events, :has_many => [:presences, :comments]

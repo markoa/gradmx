@@ -6,4 +6,9 @@ class WelcomeController < ApplicationController
     end
   end
 
+  def change_language
+    session[:locale] = params[:locale] unless params[:locale].blank?
+    redirect_to :back
+  end
+
 end
