@@ -2,6 +2,8 @@
 # This controller handles the login/logout function of the site.  
 class SessionsController < ApplicationController
 
+  before_filter :store_page_view
+
   def new
   end
 

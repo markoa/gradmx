@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale
-    I18n.locale = session[:locale].to_sym || :"sr-Latn"
+    I18n.locale = session[:locale].blank? ? :"sr-Latn" : session[:locale].to_sym
 
     # Putting this inside an initializer file would always show them in
     # the default locale and would not honor the requested

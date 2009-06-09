@@ -1,5 +1,7 @@
 class WelcomeController < ApplicationController
 
+  before_filter :store_page_view
+
   def index
     if logged_in?
       @highlights = Event.highlights
