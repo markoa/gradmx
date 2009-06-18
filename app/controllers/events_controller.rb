@@ -6,9 +6,9 @@ class EventsController < ApplicationController
   # GET /events.xml
   # GET /events.atom
   def index
-    store_page_view
     respond_to do |format|
       format.html { # index.html.erb
+        store_page_view
         @events = Event.paginate(:page => params[:page],
                                  :order => 'created_at DESC')
         @locations = Location.recent
@@ -33,7 +33,6 @@ class EventsController < ApplicationController
     Presence.new
 
     @event = Event.find(params[:id])
-    store_page_view(:event_id => @event.id)
 
     if logged_in?
       @comment = Comment.new
@@ -47,7 +46,9 @@ class EventsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html { # show.html.erb
+        store_page_view(:event_id => @event.id)
+      }
       format.xml  { render :xml => @event }
     end
   end

@@ -10,9 +10,9 @@ class LocationsController < ApplicationController
   # GET /locations
   # GET /locations.xml
   def index
-    store_page_view
     respond_to do |format|
       format.html { # index.html.erb
+        store_page_view
         @locations = Location.paginate(:page => params[:page],
                                        :order => 'name ASC')
       }
@@ -87,7 +87,9 @@ class LocationsController < ApplicationController
   # GET /locations/1.xml
   def show
     respond_to do |format|
-      format.html # show.html.erb
+      format.html { # show.html.erb
+        store_page_view(:location_id => @location.id)
+      }
       format.xml  { render :xml => @location }
     end
   end
