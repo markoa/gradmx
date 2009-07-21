@@ -1,0 +1,74 @@
+Uvod
+----
+
+Tokyo Cabinet [*] je biblioteka za upravljanje bazom podataka. U njenoj implementaciji, baza podataka je jednostavna datoteka niza zapisa koji se sastoje od ključa i vrednosti (key-value). Svaki ključ i vrednost su niz bajtova promenljive dužine, te mogu biti kako niz karaktera, tako i binarni podaci. Ne postoji koncept tabela podataka ili tipova podataka. Zapisi su organizovani u heš tabeli, B+ stablu ili nizu fiksne dužine.
+
+U okviru baze podataka zasnovanoj na heš tabeli, svaki ključ mora biti jedinstven. Za pristup bazi se pruža mogućnost snimanja zapisa sa ključem i vrednošću, kao i čitanja i brisanja zapisa po ključu. Postoji mogućnost prolaska kroz sve zapise, mada bez određenog redosleda. Ove metode pristupa su slične onima iz biblioteke DBM (ili njenim sledbenicima, kao na primer GDBM [*] [*]), definisanoj u UNIX standardu. Tokyo Cabinet predstavlja alternativu DBM-u pre svega zbog boljih performansi. Heš baza podataka je slična onoj kojom upravlja biblioteka BerkeleyDB [*].
+
+U bazi podataka čija se implementacija zasniva na B+ stablu, zapisi mogu da imaju ključeve koji se ponavljaju. Metoda pristupa za snimanje, čitanje i brisanje su dostupne kao i u bazi heš tabele - funkcionalno, one su ekvivalentne. Međutim, njena interna struktura pruža mogućnost uređivanje ključeva po korisnički definisanoj funkciji. To omogućava upite po prefiksu ključa, preuzimanje niza vrednosti prema opsegu ključeva, kao i prolazak kroz sve zapise kursorom u željenom redosledu.
+
+U bazi podataka u kojoj se podaci smeštaju u niz fiskne dužine, zapisi se čuvaju pod jedinstvenim prirodnim brojem, pa prema tome ne postoji trošak (overhead) ključa. Nije moguće snimiti dva ili više zapisa pod istim brojem. Dužina svakog zapisa je ograničena zadatom vrednošću. Dostupne su iste metode pristupa kao i kod heš baze podataka.
+
+Postoji i tabelarna baza podataka (table database), koja je zasnovana na heš implementaciji. Svaki zapis je identifikovan primarnim ključem i ima skup proizvoljnih imenovanih kolona. Ne postoji pojam sheme podataka, ali je moguća pretraga zapisa pomoću kompleksnih upita, kao i postavljanje indeksa na kolone. Po svojim osobinama, tabelarna baza podataka je slična CouchDB [*].
+
+Tokyo Cabinet je napisan u programskom jeziku C, a API postoji u jezicima C, Ruby, Perl, Python, Java i Lua. Biblioteka je dostupna na platformama koje podržavaju C99 i POSIX standarde, pod GNU Lesser General Public licencom.
+
+U izradi projekta je korišćena Ruby biblioteka rufus-tokyo [*] za pristup Tokyo Cabinet bazama podataka. Ona je izabrana umesto Ruby biblioteke koja je dostupna na sajtu Tokyo Cabinet-a (tokyocabinet-ruby) zbog bolje dokumentacije, nešto intuitivnijeg API, kao i prenosivosti na Ruby platforme koje se izvršavaju u virtuelnim mašinama, kao što su JRuby [*] i Rubinius [*]. Naime, tokyocabinet-ruby delom sadrži C kod koji se kompajlira na mašini na kojoj se instalira, što je čini neupotrebljivom na pomenutim alternativnim Ruby platformama. Sa druge strane, rufus-tokyo se zasniva na biblioteci ruby-ffi [*], koja omogućava programsko učitavanje dinamičkih biblioteka, povezivanje sa njihovim funkcijama i njihovo pozivanje direktno iz Ruby koda. Napomenimo i da rufus-tokyo omogućava pozivanje funkcija iz kompajlirane biblioteke, ukoliko je ona prisutna u sistemu.
+
+Heš baza podataka
+-----------------
+
+Tokyo Cabinet koristi heš algoritam za čitanje (retrieval) zapisa. Ukoliko bucket array!!! ima dovoljno elemenata, vremenska kompleksnost čitanja zapisa je O(1). Drugim rečima, vreme čitanja zapisa je konstantno, bez obzira na veličinu baze podataka. Isto je i sa snimanjem i brisanjem. Kolizija heš vrednosti se rukuje posebnim lančanjem. Struktura podataka lanaca je binarno stablo pretrage. Čak i ako su elementi bucket arraya neobično retki, vremenska kompleksnost čitanja je O(log n).
+
+Tokyo Cabinet čitav bucket niz, koji je snimljen u datoteci, učitava u RAM, i to ne read() sistemskim pozivom već ga direktno mapira na memoriju sa mmap(). Zbog toga je vreme povezivanja sa bazom veoma kratko, a memorijska mapa je deljiva između dva i više procesa. Smatra se da je optimalna veličina bucket niza polovina broja zapisa u bazi podataka, što uzrokuje koliziju heš vrednosti u 56.7% slučajeva. U tim slučajevima, pristup željenom zapisu se odvija u dve ili manje operacija nad datotekom. Veličina svakog elementa bucket niza je 4 bajta. To znači da je sa 2MB RAM moguće upravljati bazom od 1 miliona zapisa.
+
+Veličina datoteke može tokom rada značajno da se poveća usled fragmentacije regiona podataka. Tokyo Cabinet rešava ovaj problem sjedinjavanjem i ponovnim korišćenjem regiona koji su ostali van upotrebe. Na primer, ukoliko se na mesto jednog zapisa upisuje novi koji je duži, iskoristiće se sav region starog zapisa, a razlika će se upisati u slobodan prostor (padding) drugih. Takođe, prisutno je i pronalaženje slobodnog regiona koji najviše odgovara novom zapisu, kao i periodični proces defragmentacije koji radi nad većom grupom regiona, tako što im ili postepeno menja mesto u datoteci ili odjednom ponovo prepisuje sadržaj datoteke prethodno koristeći privremenu datoteku za preraspodelu.
+
+TODO: kratak primer koda za hash
+
+B+ stablo baza podataka
+-----------------------
+
+Prednost B+ stablo baze podataka u odnosu na onu zasnovanu na heš tabeli jeste to što pruža mogućnost pristupa zapisi po određenom redosledu, po cenu brzine. Redosled se zadaje korisničkom funkcijom, i zapisi se sortiraju i uređuju u logičke stranice. Za svaku stranicu postoji retki indeks organizovan u B+ višesmerno stablo. Vremenska kompleksnost pribavljanja je O(log n), i ono se obavlja korišćenjem kursora, koji može da se pozicionira da bilo koju poziciju zadavanjem ključa i odatle pomera u oba smera. Pošto je svaka stranica uređena u dvostruko spregnutu listu, vremenska kompleksnot pomeranja kursora je O(1).
+
+Svaka stranica B+ baze podataka se čuva kao zaseban zapis heš baze podataka, i time ona nasleđuje prostornu efikasnost. Pošto je zaglavlje svakog zapisa manje i poravnanje svake stranice podešeno prema veličini stranice, u najčešćem slučaju je veličina datoteke baze podataka za polovinu manja u odnosu na heš bazu. Iako su za ažuriranje B+ stabla potrebne operacije nad više stranica, Tokyo Cabinet ubrzava taj proces keširanjem stranica i smanjenjem broja neophodnih operacija nad datotekom. Pošto je najčešće ceo retki indeks keširan u memoriji, moguće je pribaviti zapis u jednoj datotečnoj operaciji.
+
+Svako B+ stablo može da se snima kompresovano. Podržana su dva metoda kompresije: deflate (zlib) i block sorting (bzip2). Pošto je svaki zapis u stranici slične strukture, može se očekivati visok nivo kompresije zahvaljujući Lempel-Ziv ili BWT algoritmima. U slučaju tekstualnih podataka, veličina datoteke može da se smanji na oko 25%. Ukoliko je baza podataka obimna i usko operacije čitanja i pisanja na disku predstavljaju usko grlo, kompresija može značajno da poboljša performanse obrade.
+
+TODO: kratak primer koda za BDB
+
+Baza podataka fiksne dužine
+---------------------------
+
+Baza podataka fiksne dužine može da sadrži vrednosti ograničene dužine, sa ključevima koji moraju biti prirodni brojevi. Međutim, ova struktura podataka ima osobine veće vremenske i prostorne efikasnosti u odnosu na druge.
+
+Ceo region baze podataka se mapira na memoriju 'mmap' pozivom i pristupa mu se kao višedimenzionalnom nizu, čime je smanjen broj operacija nad datotekom. Zahvaljujući ovoj jednostavnoj strukturi, baza fiksne dužine radi brže od heš baze podataka uz očuvanu konkurentnost u višenitnom okruženju.
+
+Veličina baze podataka je proporcionalna rasponu ključeva i najvećoj dozvoljenoj dužini vrednosti. Što je raspon ključeva manji ili je manja dužina svake vrednosti, postiže se bolja prostorna efikasnost. Na primer, ukoliko je najveći ključ 1000000 i vrednost ograničena na 100 bajtova, veličina baze podataka će biti oko 100MB. Pošto se regioni oko zatraženih zapisa uvek nalaze u RAM-u, veličina baze se može povećati do veličine virtuelne memorije.
+
+TODO: kratak primer koda za fixed-length
+
+Tabelarna baza podataka
+-----------------------
+
+...
+
+TODO: kratak primer koda za table
+
+I JOS:
+
+Tyrant
+
+Formati datoteka (verovatno ne)
+
+Benchmark i rezultati
+
+http://tokyocabinet.sourceforge.net/
+http://www.gnu.org/software/gdbm/
+http://www.vivtek.com/gdbm/
+http://www.oracle.com/technology/products/berkeley-db/db/index.html
+http://couchdb.apache.org/
+http://rufus.rubyforge.org/
+http://jruby.codehaus.org/
+http://rubini.us/
+http://kenai.com/projects/ruby-ffi
