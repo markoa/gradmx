@@ -51,17 +51,58 @@ TODO: kratak primer koda za fixed-length
 Tabelarna baza podataka
 -----------------------
 
-...
+Tabelarna baza podataka ne izražava strukturu ključ-vrednost već onu poput tabele u relacionoj bazi podataka. Svaki zapis je identifikovan primarnim ključem i poseduje skup kolona proizvoljnog naziva. Na primer, ljudi zaposleni u jednoj firmi mogu da se izraze zapisima čiji je primarni ključ identifikacioni broj zaposlenog, strukturiranih po kolonama koje izražavaju njegovo ime, odsek, platu itd. Za razliku od relacionih baza podataka, tabelarna baza ne zahteva definisanje šeme podataka i može da sadrži zapisa međusobno različitih struktura.
+
+Tabelarna baza podataka podržava upite ne samo po primarnom ključu već i po uslovima za proizvoljne kolone. Svaki takav uslov se sastoji od imena kolone podataka i uslovnog operatora. Za tekstualni (string) tip podataka, pružaju se uslovi potpunog podudaranja, podudaranja unapred (forward matching) i poređenja sa regularnim izrazima. Za podatke koji su brojevi, pružaju se operatori poput potpunog podudaranja i pronalaženja po opsegu. Postoje i operatori za pretragu po tagu i punog teksta (full-text search). Upit može da sadrži više uslova koji formiraju logički presek, a omogućeno je i sortiranje rezultata u rastućem ili opadajućem redosledu za tekstualne i brojčane podatke.
+
+Moguće je definisati indekse nad kolonama u cilju poboljšanja performansi pretrage i sortiranja. Iako kolone nemaju tipove podataka, indeksi mogu biti tekstualnog ili brojčanog tipa. Podržani su i obrnuti indeksi (inverted index) za simbole odvojene praznim mestom i N-gram karakterne simbole. Indeksi služe optimizatoru upita koji priprema svaki upit. Indeksi su implementirani kao B+ baze podataka snimljene u zasebne datoteke.
 
 TODO: kratak primer koda za table
 
-I JOS:
+Praktična funkcionalnost
+------------------------
 
-Tyrant
+Sve Tokyo Cabinet baze podataka podržavaju mehanizam transakcije. Moguće je združeno izvršiti niz operacija između početka i kraja transakcije, ili prekinuti transakciju i izvršiti povratak na stanje pre njenog početka.
 
-Formati datoteka (verovatno ne)
+Tokyo Cabinet pruža dva načina priključivanja na bazu podataka: čitajući i pišući. Čitač može da pribavlja ali ne i snima ili briše podatke. Pisaču su dozvoljene sve metode pristupa. Kontrola isključivosti procesa se vrši prilikom priključenja na bazu podataka pomoću zaključivanja datoteke. Dok je jedan pisač priključen na bazu, onemogućen je pristup drugim čitačima i pisačima. Dok je čitač priključen, omogućen je pristup drugim čitačima, ali ne i pisačima.
+
+API funkcije su konkurentne (reentrant) i dostupne u višenitnom okruženju. Za kontrolu pristupa operacija nad istim objektima baza podataka koriste se read-write locks. Dok jedna pišuća nit radi nad bazom, druge čitajuće i pišuće niti se blokiraju. Međutim, dok čitajuća nit pristupa bazi, drugim čitajućim nitima je pristup dozvoljen. Heš i niz baze podataka se zaključavaju po zapisu, a druge po datoteci.
+
+Pristupni interfejs
+-------------------
+
+Tokyo Cabinet pruža jednostavan objektno orijentisan API. Svaka operacija nad bazom podataka ima odgovarajuću metodu, na primer 'open' (priključivanje), 'close' (prekid rada), 'put' (umetanje), 'out' (brisanje), 'get' (pribavljanje) itd. Heš, B+ i niz baze podataka imaju veoma sličan API, pa je migracija koda sa jednog tipa baze na drugi jednostavna. Sem toga, postoji i mogućnost korišćenja apstraktnog API-a koji nudi uniforman pristup svim tipovima baze podataka. Aplikacije koje koriste apstraktni API mogu da odrede tip baze u vreme izvršavanja koda.
+
+Postoji i pomoćni API. On definiše osnovne strukture podataka kao što su lista i mapa, implementaciju memorijskog bazena (memory pool), kao i pomoćne metode za rad sa stringovima.
+
+Šest vrsta API-a postoje za programski jezik C: pomoćni, API za rad sa heš, B+ stablo, niz, tabela bazama podataka, kao i apstraktni. Postoji i interfejs za komandnu liniju koji odgovara svakom od navedenih, namenjen za izradu prototipova, testiranje i debagovanje. Sem za C, API je dostupan i u jezicima Ruby, Perl, Java i Lua.
+
+Tokyo Tyrant
+------------
+
+Tokyo Tyrant predstavlja paket koji služi kao mrežni interfejs za konkurentni pristup Tokyo Cabinet bazama podataka. Koristi se u slučaju da je potrebno da više procesa pristupa istoj bazi, ili da se pristupi bazi koja se nalazi na udaljenom računaru. Paket se sastoji od servera - procesa koji upravlja bazom podataka, i pristupne biblioteke za klijentske aplikacije.
+
+Server svoju konkurentnost zasniva na implementaciji modeliranoj prema thread pool-u i epoll/kqueue mehanizmu dostupnom u modernim Linux i BSD kernelima. Server i klijent komuniciraju kroz jednostavan binarni protokol zasnovanom na TCP/IP. Takođe implementira HTTP i memcached protokole tako da je dostupan za klijentske aplikacije na večini platformi, pisanih u različitim programskim jezicima. Za integritet podataka služe mehanizmi hot backup, update logging i replikacije. Server može da u svoj proces ugradi skript jezik Lua, pomoću koga je moguće definisati dodatne operacije nad bazom podataka.
+
+Server koristi apstraktni API, čime podržava sve tipove Tokyo Cabinet baza podataka, uključujući i memorijske heš i B+ stablo baze, kao i posebne odlike tabelarne baze podatake kroz odgovarajuća proširenja. Server radi na Linux, FreeBSD, Max OS X i Solaris operativnim sistemima.
+
+Korišćenje Tiranina
+-------------------
+
+ - pokretanje, opcije za različite tipove baze i možda još nešto; demonizacija;
+
+ - demonstrativni rufus kod
+
+ - backup + recovery
+
+ - update logging
+
+ - replikacija
+
+ - tuning
 
 Benchmark i rezultati
+---------------------
 
 http://tokyocabinet.sourceforge.net/
 http://www.gnu.org/software/gdbm/
