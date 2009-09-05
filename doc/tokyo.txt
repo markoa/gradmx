@@ -80,7 +80,7 @@ Postoji i pomoćni API. On definiše osnovne strukture podataka kao što su list
 Tokyo Tyrant
 ------------
 
-Tokyo Tyrant predstavlja paket koji služi kao mrežni interfejs za konkurentni pristup Tokyo Cabinet bazama podataka. Koristi se u slučaju da je potrebno da više procesa pristupa istoj bazi, ili da se pristupi bazi koja se nalazi na udaljenom računaru. Paket se sastoji od servera - procesa koji upravlja bazom podataka, i pristupne biblioteke za klijentske aplikacije.
+Tokyo Tyrant predstavlja paket koji služi kao mrežni interfejs za konkurentni pristup Tokyo Cabinet bazama podataka. Koristi se u slučajevima kada je potrebno da više procesa pristupa istoj bazi, ili da se pristupi bazi koja se nalazi na udaljenom računaru. Paket se sastoji od servera - procesa koji upravlja bazom podataka i pristupne biblioteke za klijentske aplikacije.
 
 Server svoju konkurentnost zasniva na implementaciji modeliranoj prema thread pool-u i epoll/kqueue mehanizmu dostupnom u modernim Linux i BSD kernelima. Server i klijent komuniciraju kroz jednostavan binarni protokol zasnovanom na TCP/IP. Takođe implementira HTTP i memcached protokole tako da je dostupan za klijentske aplikacije na večini platformi, pisanih u različitim programskim jezicima. Za integritet podataka služe mehanizmi hot backup, update logging i replikacije. Server može da u svoj proces ugradi skript jezik Lua, pomoću koga je moguće definisati dodatne operacije nad bazom podataka.
 
