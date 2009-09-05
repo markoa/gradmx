@@ -89,17 +89,76 @@ Server koristi apstraktni API, čime podržava sve tipove Tokyo Cabinet baza pod
 Korišćenje Tiranina
 -------------------
 
- - pokretanje, opcije za različite tipove baze i možda još nešto; demonizacija;
+Program `ttserver' pokreće server koji upravlja instancom baze podataka. Tip baze se može odabrati u vreme pokretanja servera pošto on bazi pristupa pomoću apsktraktnog API-a Tokyo Cabinet-a, i on se određuje na osnovu ekstenzije zadatog naziva datoteke. Konvencija imenovanja različitih tipova baza je sledeća:
 
- - demonstrativni rufus kod
+ - "*"    - označava memorijski heš
+ - "+"    - memorijsko stablo
+ - ".tch" - heš baza podataka
+ - ".tcb" - B+ b.p.
+ - ".tcf" - b.p. fiksne dužine
+ - ".tct" - tabelarna b.p.
 
- - backup + recovery
+Pored samog tipa, moguće je zadati režim pristupa kao i neki od parametara podešavanja (tuning) baze podataka, kao što su tip kompresije podataka i broj elemenata bucket niza. Neki od ovih parametara će biti posebno spomenuti kasnije u tekstu.
 
- - update logging
+Tyrant paket sadrži još dva serverska programa:
 
- - replikacija
+ - `ttservctl' služi za pokretanje i kontrolu servera. Namenjen je za korišćenje u korisničkim skriptovima i umetanje u boot sekvencu operativnog sistema.
 
- - tuning
+ - `ttulmgr' je namenjen za uvoz i izvoz zapisnika ažuriranja (update log). Korisno je po potrebi filtrirati ovaj zapisnik pomoću alata kao što je `grep'.
+
+Tokyo Tyrant paket sadrži i nekoliko klijentskih programa:
+
+ - `tcrtest' je namenjen za testiranje performansi sistema. Pomoću njega je na primer moguće zadati komande poput pisanja i uklanjanja podataka na serveru na određenom portu u određenom broju iteracija.
+
+ - `tcrmttest' je namenjen za testiranje performansi sistema u konkurentnom okruženju.
+
+ - `tcrmgr' je namenjem testiranju i debagovanju udaljenog API-a i njegovih aplikacija. Pomoću njega je moguće pristupati bazi podataka na način na koji to omogućava Tyrant API.
+
+Kompletno uputstvo za upotrebu ovih programa se nalazi na web stranici specifikacije Tokyo Tyrant.
+
+Sledi kratak primer koda za pristup bazi pomoću Tokyo Tyrant.
+
+TODO: demonstrativni rufus kod
+
+ + backup + recovery
+
+Update log
+----------
+
+Update log, ili zapisnik ažuriranja, je jedna od mera kojom Tokyo Tyrant čuva konzistentnost podataka. Na zahtev, on se vodi kao zasebna datoteka u zadatom direktorijumu tokom rada servera. Na osnovu te datoteke je moguće rekonstruisati sadržaj originalne baze podataka.
+
+U narednom primeru ćemo pokrenuti jednu instancu servera sa uključenim zapisnikom ažuriranja. Opcija `-ulog' zadaje direktorijum za smeštanje datoteka zapisnika.
+
+[terminal-1]$ mkdir ulog
+[terminal-1]$ ttserver -ulog ulog -sid 1 kutija.tch
+
+Sačuvajmo nekoliko zapisa pomoću klijentskog programa tcrmgr.
+
+[terminal-2]$ tcrmgr put localhost jedan prvi
+[terminal-2]$ tcrmgr put localhost dva drugi
+[terminal-2]$ tcrmgr put localhost tri treci
+
+Ugasimo server sa Ctrl-C i uklonimo datoteku baze podataka.
+
+[terminal-1]$ rm kutija.tch
+
+Iskopirajmo direktorijum zapisnik i pokrenimo novu instancu servera.
+
+[terminal-1]$ mv ulog ulog-back
+[terminal-1]$ mkdir ulog
+[terminal-1]$ ttserver -ulog ulog -sid 1 kutija.tch
+
+Povratimo bazu podataka iz zapisnika ažuriranja, koristeći komandu `tcrmgr restore':
+
+[terminal-2]$ tcrmgr restore localhost ulog-back
+
+Proverimo konzistentnost podataka.
+
+[terminal-2]$ tcrmgr mget localhost one two three
+
+ + replikacija
+
+ + tuning
 
 Benchmark i rezultati
 ---------------------
