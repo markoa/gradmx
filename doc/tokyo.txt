@@ -86,6 +86,10 @@ Server svoju konkurentnost zasniva na implementaciji modeliranoj prema thread po
 
 Server koristi apstraktni API, čime podržava sve tipove Tokyo Cabinet baza podataka, uključujući i memorijske heš i B+ stablo baze, kao i posebne odlike tabelarne baze podatake kroz odgovarajuća proširenja. Server radi na Linux, FreeBSD, Max OS X i Solaris operativnim sistemima.
 
+Sledi kratak primer koda za pristup bazi pomoću Tokyo Tyrant.
+
+TODO: demonstrativni rufus kod
+
 Korišćenje Tiranina
 -------------------
 
@@ -99,6 +103,10 @@ Program `ttserver' pokreće server koji upravlja instancom baze podataka. Tip ba
  - ".tct" - tabelarna b.p.
 
 Pored samog tipa, moguće je zadati režim pristupa kao i neki od parametara podešavanja (tuning) baze podataka, kao što su tip kompresije podataka i broj elemenata bucket niza. Neki od ovih parametara će biti posebno spomenuti kasnije u tekstu.
+
+Primer pokretanja servera za tabelarnu bazu podataka na portu 1985:
+
+[terminal-1]$ ttserver -port 1985 page_views.tct
 
 Tyrant paket sadrži još dva serverska programa:
 
@@ -116,23 +124,52 @@ Tokyo Tyrant paket sadrži i nekoliko klijentskih programa:
 
 Kompletno uputstvo za upotrebu ovih programa se nalazi na web stranici specifikacije Tokyo Tyrant.
 
-Sledi kratak primer koda za pristup bazi pomoću Tokyo Tyrant.
+Backup i oporavak podataka
+--------------------------
 
-TODO: demonstrativni rufus kod
+Naredni primer pokazuje kako se sa klijentske strane može zatražiti backup podataka u novu datoteku baze.
 
- + backup + recovery
+Pokrenimo jednu instancu servera koja rukuje heš bazom podataka:
+
+[terminal-1]$ ttserver kutija.tch
+
+Sačuvajmo nekoliko zapisa pomoću klijentskog programa tcrmgr.
+
+[terminal-2]$ tcrmgr put localhost jedan prvi
+[terminal-2]$ tcrmgr put localhost dva drugi
+[terminal-2]$ tcrmgr put localhost tri treci
+
+Komandom `tcrmgr copy' pravimo backup datoteku na zadatom serveru. Treba primetiti da se backup datoteka pravi na lokalnom sistemu datoteka servera, a ne na klijentskoj strani.
+
+[terminal-2]$ tcrmgr copy localhost backup.tch
+
+Ugasimo server sa Ctrl-C i uklonimo datoteku baze podataka.
+
+[terminal-1]$ rm kutija.tch
+
+Povratimo bazu podataka iz backup datoteke i ponovo pokrenimo server.
+
+[terminal-1]$ cp backup.tch casket.tch
+[terminal-1]$ ttserver casket.tch
+
+Proverimo konzistentnost podataka.
+
+[terminal-2]$ tcrmgr mget localhost jedan dva tri
+jedan	prvi
+dva	drugi
+tri	treci
 
 Update log
 ----------
 
-Update log, ili zapisnik ažuriranja, je jedna od mera kojom Tokyo Tyrant čuva konzistentnost podataka. Na zahtev, on se vodi kao zasebna datoteka u zadatom direktorijumu tokom rada servera. Na osnovu te datoteke je moguće rekonstruisati sadržaj originalne baze podataka.
+Update log, ili zapisnik ažuriranja, je druga mera kojom Tokyo Tyrant omogućava čuvanje konzistentnosti podataka. Na zahtev, on se vodi kao zasebna datoteka u zadatom direktorijumu tokom rada servera. Na osnovu te datoteke je moguće dobiti sadržaj originalne baze podataka.
 
-U narednom primeru ćemo pokrenuti jednu instancu servera sa uključenim zapisnikom ažuriranja. Opcija `-ulog' zadaje direktorijum za smeštanje datoteka zapisnika.
+U narednom primeru ćemo pokrenuti jednu instancu servera sa uključenim zapisnikom ažuriranja. Uz opciju `-ulog' se zadaje direktorijum za smeštanje datoteka zapisnika.
 
 [terminal-1]$ mkdir ulog
 [terminal-1]$ ttserver -ulog ulog -sid 1 kutija.tch
 
-Sačuvajmo nekoliko zapisa pomoću klijentskog programa tcrmgr.
+Snimimo nekoliko zapisa.
 
 [terminal-2]$ tcrmgr put localhost jedan prvi
 [terminal-2]$ tcrmgr put localhost dva drugi
@@ -148,13 +185,16 @@ Iskopirajmo direktorijum zapisnik i pokrenimo novu instancu servera.
 [terminal-1]$ mkdir ulog
 [terminal-1]$ ttserver -ulog ulog -sid 1 kutija.tch
 
-Povratimo bazu podataka iz zapisnika ažuriranja, koristeći komandu `tcrmgr restore':
+Povratimo bazu podataka iz zapisnika ažuriranja, koristeći komandu `tcrmgr restore'.
 
 [terminal-2]$ tcrmgr restore localhost ulog-back
 
 Proverimo konzistentnost podataka.
 
-[terminal-2]$ tcrmgr mget localhost one two three
+[terminal-2]$ tcrmgr mget localhost jedan dva tri
+jedan	prvi
+dva	drugi
+tri	treci
 
  + replikacija
 
