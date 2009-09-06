@@ -82,7 +82,7 @@ Tokyo Tyrant
 
 Tokyo Tyrant predstavlja paket koji služi kao mrežni interfejs za konkurentni pristup Tokyo Cabinet bazama podataka. Koristi se u slučajevima kada je potrebno da više procesa pristupa istoj bazi, ili da se pristupi bazi koja se nalazi na udaljenom računaru. Paket se sastoji od servera - procesa koji upravlja bazom podataka i pristupne biblioteke za klijentske aplikacije.
 
-Server svoju konkurentnost zasniva na implementaciji modeliranoj prema thread pool-u i epoll/kqueue mehanizmu dostupnom u modernim Linux i BSD kernelima. Server i klijent komuniciraju kroz jednostavan binarni protokol zasnovanom na TCP/IP. Takođe implementira HTTP i memcached protokole tako da je dostupan za klijentske aplikacije na večini platformi, pisanih u različitim programskim jezicima. Za integritet podataka služe mehanizmi hot backup, update logging i replikacije. Server može da u svoj proces ugradi skript jezik Lua, pomoću koga je moguće definisati dodatne operacije nad bazom podataka.
+Server svoju konkurentnost zasniva na implementaciji modeliranoj prema thread pool-u i epoll/kqueue mehanizmu dostupnom u modernim Linux i BSD kernelima. Server i klijent komuniciraju kroz jednostavan binarni protokol zasnovanom na TCP/IP. Takođe implementira HTTP i memcached protokole tako da je dostupan za klijentske aplikacije na večini platformi, pisanih u različitim programskim jezicima. Za integritet podataka služe mehanizmi backup, update logging i replikacije. Server može da u svoj proces ugradi skript jezik Lua, pomoću koga je moguće definisati dodatne operacije nad bazom podataka.
 
 Server koristi apstraktni API, čime podržava sve tipove Tokyo Cabinet baza podataka, uključujući i memorijske heš i B+ stablo baze, kao i posebne odlike tabelarne baze podatake kroz odgovarajuća proširenja. Server radi na Linux, FreeBSD, Max OS X i Solaris operativnim sistemima.
 
@@ -133,7 +133,7 @@ Pokrenimo jednu instancu servera koja rukuje heš bazom podataka:
 
 [terminal-1]$ ttserver kutija.tch
 
-Sačuvajmo nekoliko zapisa pomoću klijentskog programa tcrmgr.
+Sačuvajmo nekoliko zapisa pomoću klijentskog programa tcrmgr u drugom prozoru sistemskog terminala.
 
 [terminal-2]$ tcrmgr put localhost jedan prvi
 [terminal-2]$ tcrmgr put localhost dva drugi
@@ -149,8 +149,8 @@ Ugasimo server sa Ctrl-C i uklonimo datoteku baze podataka.
 
 Povratimo bazu podataka iz backup datoteke i ponovo pokrenimo server.
 
-[terminal-1]$ cp backup.tch casket.tch
-[terminal-1]$ ttserver casket.tch
+[terminal-1]$ cp backup.tch kutija.tch
+[terminal-1]$ ttserver kutija.tch
 
 Proverimo konzistentnost podataka.
 
@@ -196,9 +196,69 @@ jedan	prvi
 dva	drugi
 tri	treci
 
- + replikacija
+Replikacija
+-----------
 
- + tuning
+Replikacija je mehanizam za sinhronizaciju dva ili više servera baza podataka u cilju postizanje visoke dostupnosti i integriteta podataka. Server koji je izvor replikacije se naziva vodećim (master), i svaki odredišni server se naziva pratećim (slave). Za replikaciju su neophodni sledeći uslovi:
+
+ - Vodeći mora da vodi zapisnik ažuriranja.
+ - Vodeći mora da specificira jedinstveni ID servera.
+ - Svaki prateći mora da vodi zapisnik ažuriranja jer u slučaju pada vodećeg on može preuzeti njegovu ulogu.
+ - Svaki prateći mora da navede jedinstveni ID servera jer u slučaju pada vodećeg on može preuzeti njegovu ulogu.
+ - Svaki prateći mora da navede mrežnu adresu i port vodećeg servera.
+ - Svaki prateći mora da navede datoteku vremenskog pečata replikacije (replication timestamp file).
+
+Naredni primer pokazuje kako podesiti replikaciju između jednog vodećeg servera na portu 1984 i jednog pratećeg na portu 1985.
+
+Prvo pokrenimo vodeći server.
+
+[terminal-1]$ mkdir ulog-1
+[terminal-1]$ ttserver -port 1984 -ulog ulog-1 -sid 1 kutija-1.tch
+
+Potom pokrenimo prateći server.
+
+[terminal-2]$ mkdir ulog-2
+[terminal-2]$ ttserver -port 1985 -ulog ulog-2 -sid 2 \
+                -mhost localhost -mport 1984 -rts 2.rts kutija-2.tch
+
+Snimimo nekoliko zapisa u vodeći.
+
+[terminal-3]$ tcrmgr put -port 1984 localhost jedan prvi
+[terminal-3]$ tcrmgr put -port 1984 localhost dva drugi
+[terminal-3]$ tcrmgr put -port 1984 localhost tri treci
+
+Proverimo konzistentnost snimljenih zapisa u vodećem i pratećem.
+
+[terminal-2]$ tcrmgr mget -port 1984 localhost jedan dva tri
+[terminal-2]$ tcrmgr mget -port 1985 localhost jedan dva tri
+
+Simulirajmo slučaj da je došlo do pada vodećeg servera. Prekinimo njegov rad sa Ctrl-C i uklonimo njegovu datoteku baze podataka.
+
+[terminal-1]$ rm kutija-1.tch
+
+Prekinimo rad pratećeg i pokrenimo ga kao vodećeg.
+
+[terminal-2]$ ttserver -port 1985 -ulog ulog-2 -sid 2 kutija-2.tch
+
+I novi prateći, na portu 1986.
+
+[terminal-1]$ mkdir ulog-3
+[terminal-1]$ ttserver -port 1986 -ulog ulog-3 -sid 3 \
+                -mhost localhost -mport 1985 -rts 3.rts kutija-3.tch
+
+Snimimo novi zapis u vodeći.
+
+[terminal-2]$ tcrmgr put -port 1985 localhost cetiri cetvrti
+
+Proverimo konzistentnost podataka u novom vodećem i novom pratećem serveru.
+
+[terminal-2]$ tcrmgr mget -port 1985 localhost jedan dva tri cetiri
+[terminal-2]$ tcrmgr mget -port 1986 localhost jedan dva tri cetiri
+
+Tokyo Tyrant podržava i "dual master" replikaciju koja omogućava još viši nivo dostupnosti podataka. Ostvaruje se pokretanjem dva servera koji replikuju jedan drugog. Pri tome treba voditi računa da će pisanje na oba servera dovesti do do njihove međusobne nekonzistentnosti. Serveri će u tom slučaju nastaviti sa radom; postoji opcija `-rss' sa kojom će dolaziti do provera i prestanka replikacije u slučaju nekonzistentnosti podataka.
+
+Tuning
+------
 
 Benchmark i rezultati
 ---------------------
