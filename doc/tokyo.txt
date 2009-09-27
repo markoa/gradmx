@@ -260,6 +260,18 @@ Tokyo Tyrant podržava i "dual master" replikaciju koja omogućava još viši ni
 Tuning
 ------
 
+Prilikom pokretanja instanci Tokyo Tyrant servera, moguće je navesti niz parametara za podešavanje rada.
+
+U radu koji uključuje snimanje zapisa u datoteku, moguće je odabrati neku od opcija za kompresiju podataka. Dostupni algoritmi su Deflate, BZIP2 i TCBS. Korišćenje kompresije utiče na brzinu rada.
+
+Ukoliko se koristi heš baza podataka, preporučljivo je iskoristiti "#bnum=xxx" parametar radi poboljšanja performansi. bnum broj određuje bucket broj i trebao bi da bude veći od očekivanog broja zapisa.
+
+U slučaju B+ stable baze, preporučuje se podešavanje parametara "#lcnum=xxx#bnum=yyy". Prvi određuje maksimalni broj listova u stablu koji se mogu keširati. Trebao bi da bude što veći, onoliko koliko količina sistemskog RAM-a dozvoljava. Drugi određuje bucket broj i trebao bi da bude veći od 1/128 od broja zapisa koji se očekuju.
+
+Ukoliko se očekuje da serveru pristupa veliki broj klijenata, treba osloboditi ograničenje broja deskriptora datoteka po procesu. Na većini sistema on iznosi 1024. Može se poništiti opcijom "ulimit".
+
+Da bi se rešili problemi dostupnosti koji mogu nastati naglom pojavom velikog broja upita na bazu, preporučuje se sistem koji uključuje replikaciju između memorijske i datotečne baze podataka. U toj postavci, vodeći server bi bio memorijski, a prateći bi ostvarivao trajnost podataka.
+
 Benchmark i rezultati
 ---------------------
 
