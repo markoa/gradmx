@@ -24,7 +24,7 @@ Tokyo Cabinet čitav bucket niz, koji je snimljen u datoteci, učitava u RAM, i 
 
 Veličina datoteke može tokom rada značajno da se poveća usled fragmentacije regiona podataka. Tokyo Cabinet rešava ovaj problem sjedinjavanjem i ponovnim korišćenjem regiona koji su ostali van upotrebe. Na primer, ukoliko se na mesto jednog zapisa upisuje novi koji je duži, iskoristiće se sav region starog zapisa, a razlika će se upisati u slobodan prostor (padding) drugih. Takođe, prisutno je i pronalaženje slobodnog regiona koji najviše odgovara novom zapisu, kao i periodični proces defragmentacije koji radi nad većom grupom regiona, tako što im ili postepeno menja mesto u datoteci ili odjednom ponovo prepisuje sadržaj datoteke prethodno koristeći privremenu datoteku za preraspodelu.
 
-TODO: kratak primer koda za hash
+Primer 1.1
 
 B+ stablo baza podataka
 -----------------------
@@ -35,18 +35,16 @@ Svaka stranica B+ baze podataka se čuva kao zaseban zapis heš baze podataka, i
 
 Svako B+ stablo može da se snima kompresovano. Podržana su dva metoda kompresije: deflate (zlib) i block sorting (bzip2). Pošto je svaki zapis u stranici slične strukture, može se očekivati visok nivo kompresije zahvaljujući Lempel-Ziv ili BWT algoritmima. U slučaju tekstualnih podataka, veličina datoteke može da se smanji na oko 25%. Ukoliko je baza podataka obimna i usko operacije čitanja i pisanja na disku predstavljaju usko grlo, kompresija može značajno da poboljša performanse obrade.
 
-TODO: kratak primer koda za BDB
-
 Baza podataka fiksne dužine
 ---------------------------
 
-Baza podataka fiksne dužine može da sadrži vrednosti ograničene dužine, sa ključevima koji moraju biti prirodni brojevi. Međutim, ova struktura podataka ima osobine veće vremenske i prostorne efikasnosti u odnosu na druge.
+Baza podataka fiksne dužine može da sadrži vrednosti ograničene dužine, sa ključevima koji moraju biti prirodni brojevi. Ova struktura podataka ima osobine veće vremenske i prostorne efikasnosti u odnosu na druge.
 
 Ceo region baze podataka se mapira na memoriju 'mmap' pozivom i pristupa mu se kao višedimenzionalnom nizu, čime je smanjen broj operacija nad datotekom. Zahvaljujući ovoj jednostavnoj strukturi, baza fiksne dužine radi brže od heš baze podataka uz očuvanu konkurentnost u višenitnom okruženju.
 
 Veličina baze podataka je proporcionalna rasponu ključeva i najvećoj dozvoljenoj dužini vrednosti. Što je raspon ključeva manji ili je manja dužina svake vrednosti, postiže se bolja prostorna efikasnost. Na primer, ukoliko je najveći ključ 1000000 i vrednost ograničena na 100 bajtova, veličina baze podataka će biti oko 100MB. Pošto se regioni oko zatraženih zapisa uvek nalaze u RAM-u, veličina baze se može povećati do veličine virtuelne memorije.
 
-TODO: kratak primer koda za fixed-length
+Primer 1.2
 
 Tabelarna baza podataka
 -----------------------
@@ -57,7 +55,7 @@ Tabelarna baza podataka podržava upite ne samo po primarnom ključu već i po u
 
 Moguće je definisati indekse nad kolonama u cilju poboljšanja performansi pretrage i sortiranja. Iako kolone nemaju tipove podataka, indeksi mogu biti tekstualnog ili brojčanog tipa. Podržani su i obrnuti indeksi (inverted index) za simbole odvojene praznim mestom i N-gram karakterne simbole. Indeksi služe optimizatoru upita koji priprema svaki upit. Indeksi su implementirani kao B+ baze podataka snimljene u zasebne datoteke.
 
-TODO: kratak primer koda za table
+Primer 1.3
 
 Praktična funkcionalnost
 ------------------------
@@ -85,10 +83,6 @@ Tokyo Tyrant predstavlja paket koji služi kao mrežni interfejs za konkurentni 
 Server svoju konkurentnost zasniva na implementaciji modeliranoj prema thread pool-u i epoll/kqueue mehanizmu dostupnom u modernim Linux i BSD kernelima. Server i klijent komuniciraju kroz jednostavan binarni protokol zasnovanom na TCP/IP. Takođe implementira HTTP i memcached protokole tako da je dostupan za klijentske aplikacije na večini platformi, pisanih u različitim programskim jezicima. Za integritet podataka služe mehanizmi backup, update logging i replikacije. Server može da u svoj proces ugradi skript jezik Lua, pomoću koga je moguće definisati dodatne operacije nad bazom podataka.
 
 Server koristi apstraktni API, čime podržava sve tipove Tokyo Cabinet baza podataka, uključujući i memorijske heš i B+ stablo baze, kao i posebne odlike tabelarne baze podatake kroz odgovarajuća proširenja. Server radi na Linux, FreeBSD, Max OS X i Solaris operativnim sistemima.
-
-Sledi kratak primer koda za pristup bazi pomoću Tokyo Tyrant.
-
-TODO: demonstrativni rufus kod
 
 Korišćenje Tiranina
 -------------------
@@ -123,6 +117,10 @@ Tokyo Tyrant paket sadrži i nekoliko klijentskih programa:
  - `tcrmgr' je namenjem testiranju i debagovanju udaljenog API-a i njegovih aplikacija. Pomoću njega je moguće pristupati bazi podataka na način na koji to omogućava Tyrant API.
 
 Kompletno uputstvo za upotrebu ovih programa se nalazi na web stranici specifikacije Tokyo Tyrant.
+
+Sledi kratak primer koda za pristup bazi pomoću Tokyo Tyrant.
+
+Primer 1.4
 
 Backup i oporavak podataka
 --------------------------
