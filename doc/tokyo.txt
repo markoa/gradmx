@@ -273,6 +273,43 @@ Da bi se rešili problemi dostupnosti koji mogu nastati naglom pojavom velikog b
 Benchmark i rezultati
 ---------------------
 
+Pored fleksibilnosti koju pruža pristup čuvanju podataka bez šeme, brzina i efikasno korišćenje resursa računara (jedan Tyrant proces zauzima oko 340KB radne memorije) su njegove najveće prednosti u odnosu na druge sisteme baza podataka. Ovde će biti prikazani rezultati ispitivanja performansi poredeći rad sa 1000 zapisa koristeći Rufus::Edo::Table, Rufus::Tokyo::TyrantTable i ActiveRecord sa MySQL adapterom, sa tabelama:
+
+class PeopleMigration < ActiveRecord::Migration
+
+  def self.up
+    create_table :people do |t|
+      t.string   :email
+      t.string   :name
+      t.string   :gender
+      t.datetime :birthday
+      t.string   :city
+      t.text     :about
+    end
+    add_index :people, :email
+  end
+
+  # def self.down ...
+end
+
+class PageViewMigration < ActiveRecord::Migration
+
+  def self.up
+    create_table :page_views do |t|
+      t.integer :user_id
+      t.integer :entity_id
+      t.timestamps
+    end
+  end
+
+  # def self.down ...
+
+end
+
+TODO: GRAFIKONI
+
+Treba imati u vidu da je u praksi razvoja web aplikacija Tokyo Tyrant interfejs praktično jedini način na koji se može pristupati Tokyo bazi podataka, pošto vezivanje za fajl na lokalnom sistemu datoteka nije dovoljno fleksibilno rešenje.
+
 http://tokyocabinet.sourceforge.net/
 http://www.gnu.org/software/gdbm/
 http://www.vivtek.com/gdbm/
