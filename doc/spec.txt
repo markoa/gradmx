@@ -1,0 +1,125 @@
+=====================
+Specifikacija sistema
+=====================
+
+U ovom poglavlju će biti izloženi i opisani UML dijagrami koji predstavljaju specifikaciju gradmx aplikacije.
+
+Slučajevi korišćenja
+====================
+
+Registracija
+------------
+
+ * Kratak opis:
+ * Preduslovi: 
+ * Opis:
+ * Izuzeci:
+
+Prijava na sistem
+-----------------
+
+ * Kratak opis:
+ * Preduslovi: 
+ * Opis:
+ * Izuzeci:
+
+Odjava sa sistema
+-----------------
+
+ * Kratak opis:
+ * Preduslovi: 
+ * Opis:
+ * Izuzeci:
+
+Pregled svih događaja
+---------------------
+
+ * Kratak opis:
+ * Preduslovi: 
+ * Opis:
+ * Izuzeci:
+
+Prikaz događaja
+---------------
+
+ * Kratak opis:
+ * Preduslovi: 
+ * Opis:
+ * Izuzeci:
+
+Objava novog događaja
+---------------------
+
+ * Kratak opis:
+ * Preduslovi: 
+ * Opis:
+ * Izuzeci:
+
+Izmena podataka o događaju
+--------------------------
+
+ * Kratak opis:
+ * Preduslovi: 
+ * Opis:
+ * Izuzeci:
+
+Pregled svih mesta
+------------------
+
+ * Kratak opis:
+ * Preduslovi: 
+ * Opis:
+ * Izuzeci:
+
+Prikaz mesta
+------------
+
+ * Kratak opis:
+ * Preduslovi: 
+ * Opis:
+ * Izuzeci:
+
+Objava novog mesta
+------------------
+
+ * Kratak opis:
+ * Preduslovi: 
+ * Opis:
+ * Izuzeci:
+
+Izmena podataka o mestu
+-----------------------
+
+ * Kratak opis:
+ * Preduslovi: 
+ * Opis:
+ * Izuzeci:
+
+Prijava prisustva na događaj
+----------------------------
+
+ * Kratak opis:
+ * Preduslovi: 
+ * Opis:
+ * Izuzeci:
+
+Pisanje komentara
+-----------------
+
+ * Kratak opis:
+ * Preduslovi: 
+ * Opis:
+ * Izuzeci:
+
+Promena jezika
+--------------
+
+ * Kratak opis:
+ * Preduslovi: 
+ * Opis:
+ * Izuzeci:
+
+Dijagrami klasa
+===============
+
+U nastavku su prikazani dijagrami klasa gradmx aplikacije. ... Dato je i kraće objašnjenje uloge klasa.
