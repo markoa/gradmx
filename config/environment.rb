@@ -29,6 +29,8 @@ Rails::Initializer.run do |config|
   config.gem "rufus-tokyo", :version => "0.1.12",
     :lib => "rufus/tokyo/tyrant", :source => "http://gems.github.com"
 
+  config.gem "tyrantmanager", :version => "1.3.0"
+
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
