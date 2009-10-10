@@ -54,6 +54,27 @@ class LocationsControllerTest < ActionController::TestCase
     end
   end
 
+  test "should show edit form" do
+    login_as :quentin
+    get :edit, :id => 1
+    assert_response :success
+  end
+
+  test "should update location" do
+    login_as :quentin
+    update_location(:options => { :name => 'behringer' })
+    assert_equal 'behringer', assigns(:location).name
+    assert_redirected_to assigns(:location)
+  end
+
+  test "should not update location with blank name" do
+    login_as :quentin
+    update_location(:options => { :name => '' })
+    assert_response :success
+    assert_template 'edit'
+    assert assigns(:location).errors.on(:name)
+  end
+
   protected
 
   def create_location(args = {})
@@ -68,6 +89,21 @@ class LocationsControllerTest < ActionController::TestCase
       }.merge(city_options),
       "description" => "Very very short"
     }.merge(options)
+  end
+
+  def update_location(args = {})
+    options = args[:options] ||= {}
+    city_options = args[:city_options] ||= {}
+
+    put :update, "location" => {
+      "name" => "Some place",
+      "city_attributes" => {
+        "name" => "Istanbul",
+        "country_name" => "Turkey"
+      }.merge(city_options),
+      "description" => "Very very short"
+    }.merge(options),
+    :id => 1
   end
 
 end

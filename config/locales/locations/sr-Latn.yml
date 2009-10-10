@@ -2,6 +2,8 @@
   locations:
     publish_new: Objavi novo
     new: Novo mesto
+    edit: Izmeni podatke o mestu {{location}}
     back_to_all: Nazad na sva mesta
+    back_to_location: Nazad na mesto {{location}}
 
     name: Ime

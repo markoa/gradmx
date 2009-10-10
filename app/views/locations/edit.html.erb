@@ -1,0 +1,5 @@
+<%= page_h(t('locations.edit', :location => @location.name)) %>
+
+<%= render(:partial => 'form') %>
+
+<%= link_to(t('locations.back_to_location', :location => @location.name), @location) %>

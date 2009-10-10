@@ -1,0 +1,34 @@
+<%= error_messages_for :location %>
+
+<% form_for @location do |f| -%>
+
+  <div class="ctrlHolder">
+    <%= label_tag 'name', t('locations.name') %><br/>
+    <%= f.text_field :name %>
+  </div>
+
+  <% fields_for 'location[city_attributes]', @location.city do |c| %>
+    <div class="ctrlHolder">
+      <label for="location_city_attributes_name">
+        <%= t('home.city') %>
+      </label> <br />
+      <%= c.text_field :name %>
+    </div>
+
+    <div class="ctrlHolder">
+      <label for="location_city_attributes_country_name">
+        <%= t('home.country') %>
+      </label> <br />
+      <%= c.country_select :country_name %>
+    </div>
+  <% end -%>
+
+  <div class="ctrlHolder">
+    <%= label_tag 'description', t('events.description') %><br/>
+    <%= f.text_area :description, :rows => 8, :cols => 72 %>
+  </div>
+
+  <div class="ctrlHolder">
+    <%= submit_tag t('general.save') %>
+  </div>
+<% end -%>
