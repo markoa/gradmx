@@ -14,7 +14,7 @@
 <% end -%>
 
 <h2><%= t('home.highlights') %></h2>
-<ul>
+<ul id="highlights">
   <% @highlights.each do |e| %>
     <li>
       <%= link_to(e.title, e) %>
