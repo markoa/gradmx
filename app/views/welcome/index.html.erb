@@ -5,25 +5,23 @@
   <small>
     <%= link_to(t('home.log_out'), logout_path) %>
   </small>
-
-  <h2><%= t('home.highlights') %></h2>
-  <ul>
-    <% for e in @highlights %>
-    <li>
-      <%= link_to(e.title, e) %>
-    </li>
-    <% end %>
-  </ul>
-
-  <%= link_to(t('home.view_events'), events_path) %>
 <% else -%>
   <p>
     <%= link_to t('home.login'), login_path %>
     <%= t 'general.or' %>
     <%= link_to t('home.signup'), signup_path %>
   </p>
-
-  <p>
-    <%= link_to(t('home.view_events'), events_path) %>
-  </p>
 <% end -%>
+
+<h2><%= t('home.highlights') %></h2>
+<ul>
+  <% @highlights.each do |e| %>
+    <li>
+      <%= link_to(e.title, e) %>
+    </li>
+  <% end %>
+</ul>
+
+<p>
+  <%= link_to(t('home.view_events'), events_path) %>
+</p>

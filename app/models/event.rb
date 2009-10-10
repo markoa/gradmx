@@ -24,7 +24,12 @@ class Event < ActiveRecord::Base
     events = []
     ::Highlights.new
     for k in Highlights.table.keys(:prefix => "event").reverse[0..9].reverse
-      events << Event.find(Highlights.table[k]["id"].to_i)
+      begin
+        id = Highlights.table[k]["id"].to_i
+        events << Event.find(id)
+      rescue ActiveRecord::RecordNotFound
+        logger.error "|X| Highlighted event #{id} not found"
+      end
     end
     events
   end
