@@ -11,6 +11,12 @@
   <% end %>
 </ul>
 
+<p>
+  <%= t('locations.published_by') %>:
+  <%= link_to(@location.user.login, @location.user) %> //
+  <%= link_to(t('general.edit'), edit_location_path(@location)) %>
+</p>
+
 <% content_for :right_column do %>
   <% if logged_in? -%>
     <p>
