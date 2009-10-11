@@ -1,0 +1,105 @@
+2. Ruby on Rails
+================
+
+Ruby on Rails (ili kraće Rails) je framework za razvoj web aplikacija napisan u programskom jeziku Ruby. Dizajniran je sa ciljem da olakša razvoj time što polazi od pretpostavki o tome na koji način programer treba da reši probleme sa kojima se suočava tokom rada.
+
+Rails filozofija uključuje nekoliko vodećih principa:
+
+  * DRY – “Don’t Repeat Yourself” – sugeriše da delove koda ne treba pisati više od jednom.
+
+  * Convention Over Configuration – znači da Rails izlazi u susret programeru sa skupom preporučenih rešenja umesto zahteva za izborom komponenti i niza konfiguracionih datoteka.
+
+  * REST kao šablon za web aplikacije – smatra se da je organizovanje aplikacije u resurse i standardne HTTP upite najbrži put razvoja.
+
+2.1. MVC arhitektura
+--------------------
+
+Rails se zasniva na Model, View, Controller (MVC) arhitekturi. Prednosti MVC uključuju:
+
+  * Izolovanje poslovne logike od korisničkog interfejsa
+
+  * Držanje principa DRY
+
+  * Lakše održavanje kod pošto je uvek jasno gde pripadaju različiti tipovi koda 
+
+2.1.1 Modeli podataka
+---------------------
+
+Model predstavlja informaciju (podatak) u aplikaciji i pravila po kojima se tim podacima manipuliše. U slučaju Railsa, modeli se koriste prvenstveno za upravaljanje pravilima interakcije sa odgovarajućom tabelom baze podataka. Najčešći slučaj je da jedna tabela baze podataka odgovara jednom modelu u aplikaciji. U modelima se koncentriše najveći deo poslovne logike aplikacije.
+
+2.1.2 Prezentacioni sloj
+------------------------
+
+Prezentacioni sloj (view) je korisnički interfejs aplikacije. U Railsu, to su najčešće HTML datoteke sa umetnutim Ruby kodom čija je funkcija ograničena na prezentaciju podataka. Uloga prezentacionog sloja je da usluži podacima web pretraživač, ili uopšte softver koji šalje zahtev ka aplikaciji.
+
+2.1.3 Kontroleri
+----------------
+
+Kontroleri povezuju modele i prezentaciju. U Railsu, kontroleri su odgovorni za obradu dolazećih zahteva, upite ka podacima preko modela i predaju tih podataka prezentacionom sloju.
+
+2.2 Komponente Railsa
+---------------------
+
+Kompletan skup komponenti koje Rails pruža za razvoj web aplikacija uključuje:
+
+  * Action Controller
+  * Action View
+  * Active Record
+  * Action Mailer
+  * Active Resource
+  * Railties
+  * Active Support
+
+2.2.1 Action Controller
+-----------------------
+
+Action Controller je komponenta koja upravlja kontrolerima u Rails aplikaciji. Action Controller obrađuje dolazeće zahteve, izdvaja parametre i otprema ih akciji kojoj su namenjeni. Usluge koje pruža uključuju upravljanje sesijom, kontrola renderovanja template-a (šablona prezentacije) i upravljanje preusmeravanjima (redirections).
+
+2.2.2 Action View
+-----------------
+
+Action View upravlja prezentacionim slojem Rails aplikacije - renderovanjem template-a - uključujući ugnježdene i parcijalne šablone, kao i ugrađenu podršku za AJAX.
+
+2.2.3 Active Record
+-------------------
+
+Active Record je osnova za sve modele u Rails aplikaciji. Pruža apstrakciju nad bazom podataka, osnovnu CRUD funkcionalnost, napredne mogućnosti pronalaženja zapisa i povezivanja modela.
+
+2.2.4 Action Mailer
+-------------------
+
+Action Mailer je framework za izradu email usluga. Može se koristiti za slanje emaila na osnovu šablona, ili primanje i obradu.
+
+2.2.5 Active Resource
+---------------------
+
+Active Resource pruža framework za povezivanje poslovnih objekata i REST web servisa. Implementira način za mapiranje web baziranih resursa na lokalne objekte sa CRUD semantikom.
+
+2.2.6 Railties
+--------------
+
+Railties pruža kod koji konstruiše nove aplikacije, upravlja njihovom konfiguracijom i povezuje sve komponente framework-a u Rails aplikaciji.
+
+2.2.7 Active Support
+--------------------
+
+Active Support predstavlja kolekciju korisnih klasa i proširenja standardne Ruby biblioteke koje koristi kako sam Rails framework tako i Rails aplikacija.
+
+2.3 REST
+--------
+
+REST (Representational State Transfer) može, za potrebe pregleda razvoja web aplikacija u Railsu, da se svede na dva principa:
+
+  * Korišćenje identifikatora resursa (što može da se smatra URL-om) za njihovo predstavljanje
+
+  * Prenošenje reprezentacija stanja tog resursa među komponentama sistema
+
+Za osnovu REST (ili "RESTful" kako se često navodi u tekstovima na engleskom jeziku) arhitekture se smatra doktorska disertacija Roya Fieldinga, Architectural Styles and the Design of Network-based Software Architectures [*].
+
+Na primer, zahtev kao što je:
+
+DELETE /photos/17
+
+bi se u Rails aplikaciji smatrao zahtevom za brisanjem Photo resursa čiji je ID 17. U praksi se REST pokazao kao prirodan način modelovanja arhitekture web aplikacija, a Rails to dodatno olakšava time što koristi konvencije koje programera oslobađaju kompleksnosti i razlika među web pretraživačima.
+
+[*] http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm
