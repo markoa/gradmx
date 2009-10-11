@@ -1,4 +1,3 @@
 gradmx
 
-University project, aiming to integrate use of Tokyo Cabinet
-in a Ruby on Rails web application.
+University project, integrates use of Tokyo Cabinet in a Ruby on Rails web application. Includes TokyoRecord, a wrapper of Tokyo Tyrant tables in an API that feels like ActiveRecord.

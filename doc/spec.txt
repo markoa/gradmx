@@ -1,11 +1,13 @@
-=====================
-Specifikacija sistema
-=====================
+========================
+3. Specifikacija sistema
+========================
 
 U ovom poglavlju će biti izloženi i opisani UML dijagrami koji predstavljaju specifikaciju gradmx aplikacije.
 
-Slučajevi korišćenja
-====================
+3.1 Slučajevi korišćenja
+========================
+
+Slika 3.1. - slučajevi korišćenja gradmx aplikacije
 
 Registracija
 ------------
@@ -119,7 +121,25 @@ Promena jezika
  * Opis: Praćenjem jednog od odgovarajućih linkova korisnički interfejs se u svakom narednom zahtevu prikazuje na odabranom jeziku, srpskom ili engleskom.
  * Izuzeci: Nema.
 
-Dijagrami klasa
-===============
+3.2 Dijagrami klasa
+===================
 
-U nastavku su prikazani dijagrami klasa gradmx aplikacije. ... Dato je i kraće objašnjenje uloge klasa.
+U nastavku su prikazani dijagrami klasa modela gradmx aplikacije, a dato je i kraće objašnjenje njihovih uloga.
+
+Slika 3.2. - Klase ActiveRecord modela
+
+Slika 3.3. - Klase modela koje se oslanjaju na Tokyo Cabinet biblioteku
+
+Klasa User opisuje registrovanog korisnika gradmx aplikacije. Ona se u velikoj meri oslanja na restful-authentication plugin, koji pruža pomoćni kod za registraciju i autentifikaciju, rukovanje šifrom, upravljanje sesijom i cookie-em.
+
+Klase Event i Location opisuju događaje i mesta. Svaki događaj je vezan za jedno mesto, može imati više komentara (opisanih klasom Comment) i prisustva (opisanih klasom Presence).
+
+I korisnik i mesto pripadaju jednom gradu, opisanom klasom City. Ona sadrži logiku koja garantuje nepostojanje duplikata na osnovu korisnikovog unosa.
+
+TokyoRecord je objektno relacioni omotač oko Tokyo Cabinet tabela kojima se pristupa preko Tokyo Tyrant servera, i pruža osnovni API koji liči na ActiveRecord. Pomoću njega su izvedeni modeli Highlights, PageView i Presence.
+
+Highlights sadrži veze ka odabranim događajima koji se promovišu na početnoj stranici aplikacije.
+
+PageView opisuje pregled jedne stranice gradmx aplikacije. Može da predstavlja kako anonimne tako i preglede prijavljenih korisnika, a ima mogućnost snimanja vrednosti ključa ka pregledanom događaju ili mestu, zbog posebne važnosti tih stranica.
+
+Presence opisuje prisustvo registrovanog korisnika na nekom događaju.
