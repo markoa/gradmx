@@ -26,7 +26,7 @@ Rails::Initializer.run do |config|
   config.gem "mislav-will_paginate", :version => "2.3.8",
     :lib => "will_paginate", :source => "http://gems.github.com"
 
-  config.gem "rufus-tokyo", :version => "0.1.12",
+  config.gem "rufus-tokyo", :version => "1.0",
     :lib => "rufus/tokyo/tyrant", :source => "http://gems.github.com"
 
   config.gem "tyrantmanager", :version => "1.3.0"
