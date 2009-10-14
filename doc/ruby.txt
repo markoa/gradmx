@@ -21,6 +21,27 @@ Koriščenje zagrada prilikom pozivanja funkcija i metoda nije neophodno. U Ruby
 Kontrola toka
 -------------
 
+Ruby sadrži uobičajene kontrole toka, kao što su naredba if ili while petlja. Razlikuje se od jezika iz C familije po tome što se ne koriste vitičaste zagrade oko tela ovih naredbi, već kraj tela označava ključna reč end:
+
+if count > 10
+  puts "Pokušajte ponovo"
+elsif count == 3
+  puts "Trojka"
+else
+  puts "Unesite broj"
+end
+
+while weight < 400 and people_count <= 10
+  person = next_person()
+  weight += person.weight
+  people_count += 1
+end
+
+Modifikatori naredbi su korisni kada je telo naredbe ili petlje samo jedan izraz:
+
+puts "Paran broj broj" unless x%2 == 1
+distance = distance * 1.2 while distance < 100
+
 Blokovi i iteratori
 -------------------
 
@@ -72,8 +93,19 @@ def square(x)
   x*x
 end
 
-Imena, interpunkcija i prefiksi
--------------------------------
+Imena, prefiksi i sufiksi
+-------------------------
+
+Lokalne promenljive, parametri metoda i nazivi metoda treba da počnu malim slovom ili donjom crtom: event, user_name. Podaci članovi (instance variables) počinju znakom @, na primer @location. Klasne promenljive (class variables, deljene među svim instancama jedne klasa) počinju sa @@, a globalne promenljive sa $. Ruby konvencija je da se koristi donja crta za razdvajanje reči u nazivima promenljivih ili metoda.
+
+Imena klasa, modula i konstanti moraju početi velikim slovom. Po konvenciji reči se u njima razdvajaju velikim slovima, npr. ActiveRecord.
+
+Ruby metode mogu da se završe i znakom jednakosti, upitnikom i uzvičnikom. Metode koje se završavaju znakom jednakosti mogu da se pozivaju sintaksom dodele. Ukoliko objekat o ima metodu x=, onda su sledeće dve linije koda ekvivalentne:
+
+o.x=(1) # Uobičajena sintaksa pozivanja metode
+o.x = 1 # Pozivanje metoda kroz dodelu
+
+Upitnika označava predikat - metode koje vraćaju Boolean vrednost. Na primer, klase Array i Hash definišu metodu empty? koja proverava da li struktura sadrži ijedan element. Uzvičnik na kraju naziva metode ukazuje da ona koristi sa opreznošću. Niz klasa iz standardne Ruby biblioteke definiše parove metoda koje se isto zovu, osim što se jedna završava uzvičnikom. Obično se radi o tome da jedna vraća modifikovanu kopiju izvornog objekta, dok druga vrši operaciju nad samim objektom. Tako Array objekti imaju metode sort i sort!. U Railsu je češće razlika u (ne)bacanju izuzetka, npr. save i save!.
 
 Klase i moduli
 --------------
