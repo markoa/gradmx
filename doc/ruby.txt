@@ -8,7 +8,7 @@ Ruby je dinamički interpretirani programski jezik. Inspirisan je jezicima Lisp,
 Objektna orijentisanost
 -----------------------
 
-U Ruby-ju, svaka vrednost je objekat, čak i prosti numerički simboli i vrednosti true, false i nil (nil je Ruby varijanta null - posebna vrednost koja označava odsustvo vrednosti). U primerima koji to demonstriraju pozivamo metodu po imenu class. Komentari u Ruby-ju počinju sa #.
+U Rubiju, svaka vrednost je objekat, čak i prosti numerički simboli i vrednosti true, false i nil (nil je Ruby varijanta null - posebna vrednost koja označava odsustvo vrednosti). Drugim rečima ne postoji pojam primitivnih i objektnih tipova. U primerima koji to demonstriraju pozivamo metodu po imenu class. Komentari u Rubiju počinju sa #.
 
   1.class      # => Fixnum
   0.0.class    # => Float
@@ -16,7 +16,7 @@ U Ruby-ju, svaka vrednost je objekat, čak i prosti numerički simboli i vrednos
   false.class  # => FalseClass
   nil.class    # => NilClass
 
-Koriščenje zagrada prilikom pozivanja funkcija i metoda nije neophodno. U Ruby-ju su zagrade obično opcione i često se ni ne pišu, naročito kada se pozvanoj metodi ne prosleđuje nijedan parametar. Posledica toga je da poziv metode liči na referenciranje imenovanog polja ili promenljive objekta. To nije slučajno, međutim Ruby striktno vodi računa o enkapsulaciji; pristup unutrašnjem stanju objekta spolja nije dozvoljen. Svakom takvom pristupu mora posredovati pristupna metoda, kao što je metoda class u primeru iznad.
+Koriščenje zagrada prilikom pozivanja funkcija i metoda nije neophodno. U Rubiju su zagrade obično opcione i često se ni ne pišu, naročito kada se pozvanoj metodi ne prosleđuje nijedan parametar. Posledica toga je da poziv metode liči na referenciranje imenovanog polja ili promenljive objekta. To nije slučajno, međutim Ruby striktno vodi računa o enkapsulaciji; pristup unutrašnjem stanju objekta spolja nije dozvoljen. Svakom takvom pristupu mora posredovati pristupna metoda, kao što je metoda class u primeru iznad.
 
 Kontrola toka
 -------------
@@ -56,7 +56,7 @@ end
 
 times, each, select i inject su iteratori koji interakuju sa blokovima koda koji dolaze posle njih. Kontrola toka koja stoji iza ovoga je yield, naredba koja privremeno prebacuje kontrolu izvršavanja sa iteratora na blok koda koji je vezan za poziv iteratora. Kada dođe do kraja koda u bloku, metoda iteratora preuzima kontrolu i nastavlja sa izvršenjem od prve linije posle yield. Česta konvencija je da se jednolinijski blokovi pišu sa vitičastim zagradama, a blokovi sa više linija koda sa do/end.
 
-Povezivanje bloka koda sa pozivom metode je osnovna i vrlo važna mogućnost Ruby-ja. Ono ne mora biti vezano samo za petlje, npr.:
+Povezivanje bloka koda sa pozivom metode je osnovna i vrlo važna mogućnost Rubija. Ono ne mora biti vezano samo za petlje, npr.:
 
 File.open("data.txt") do |f|
   line = f.readline
@@ -65,7 +65,7 @@ end
 Heševi i simboli
 ----------------
 
-Heševi su, kao i nizovi, osnovna struktura podataka u Ruby-ju. Zasnovani su na strukturi podataka heš tabele i služe za mapiranje proizvoljnih ključeva na (takođe proizvoljne) vrednosti.
+Heševi su, kao i nizovi, osnovna struktura podataka u Rubiju. Zasnovani su na strukturi podataka heš tabele i služe za mapiranje proizvoljnih ključeva na (takođe proizvoljne) vrednosti.
 
 h = {
   :jedan => 1,
@@ -78,11 +78,18 @@ h.each do |key, value|      # ugrađeni iterator each daje ključ i vrednost
   print "#{key}: #{value}"  # primer interpolacije stringova; implicitno je pozvana metoda to_s, koju poseduje svaki objekat
 end
 
-Heševi mogu da prime bilo koji objekat kao ključ, međutim za to se, kao u primeru iznad, najčešće koriste simboli. Simboli su nepromenljivi, interno čuvani stringovi.
-
-Heševi se često koriste kao parametri funkcija. U Ruby-ju je pisanje vitičastih zagrada opciono ukoliko je heš poslednji u listi parametara. Rails ovu mogućnost često koristi, a rezultat je intuitivniji i izražajniji kod. U sledećoj liniji se prosleđuje jedan heš funkciji redirect_to. Zbog izostavljanja zagrada utisak je da Rails ima definisane posebne ključne ruči za ovu svrhu.
+Heševi se često koriste kao parametri funkcija. U Rubiju je pisanje vitičastih zagrada opciono ukoliko je heš poslednji u listi parametara. Rails ovu mogućnost često koristi, a rezultat je intuitivniji i izražajniji kod. U sledećoj liniji se prosleđuje jedan heš funkciji redirect_to. Zbog izostavljanja zagrada utisak je da Rails ima definisane posebne ključne ruči za ovu svrhu.
 
 redirect_to :action => 'show', :id => event.id
+
+Heševi mogu da prime bilo koji objekat kao ključ, međutim za to se, kao u primeru iznad, najčešće koriste simboli. Simboli su nepromenljivi, interno čuvani stringovi. Tipična implementacija Ruby interpretera sadrži tabelu simbola u kojoj se čuvaju imena svih klasa, metoda i promenljivih za koje se zna. Ovo omogućava interpreteru da izbegne većinu poređenja stringova, tako što će, na primer, pronalaziti imena metoda po njihovoj poziciji u tabeli simbola. To pretvara relativno skupu string operaciju u jeftinu integer operaciju.
+
+Simboli se mogu koristiti u reflektivnom kodu kao referenca na naziv metode. Naredni kod proverava da li objekat o sadrži metodu zadatu metodu (size) i poziva je u slučaju da da:
+
+name = :size
+if o.respond_to? name
+  o.send(name)
+end
 
 Metode
 ------
@@ -96,7 +103,7 @@ end
 Imena, prefiksi i sufiksi
 -------------------------
 
-Lokalne promenljive, parametri metoda i nazivi metoda treba da počnu malim slovom ili donjom crtom: event, user_name. Podaci članovi (instance variables) počinju znakom @, na primer @location. Klasne promenljive (class variables, deljene među svim instancama jedne klasa) počinju sa @@, a globalne promenljive sa $. Ruby konvencija je da se koristi donja crta za razdvajanje reči u nazivima promenljivih ili metoda.
+Lokalne promenljive, parametri metoda i nazivi metoda treba da počnu malim slovom ili donjom crtom: event, user_name. Promenljive instanci (podaci članovi) počinju znakom @, na primer @location. Klasne promenljive (class variables, deljene među svim instancama jedne klasa) počinju sa @@, a globalne promenljive sa $. Ruby konvencija je da se koristi donja crta za razdvajanje reči u nazivima promenljivih ili metoda.
 
 Imena klasa, modula i konstanti moraju početi velikim slovom. Po konvenciji reči se u njima razdvajaju velikim slovima, npr. ActiveRecord.
 
@@ -107,8 +114,119 @@ o.x = 1 # Pozivanje metoda kroz dodelu
 
 Upitnika označava predikat - metode koje vraćaju Boolean vrednost. Na primer, klase Array i Hash definišu metodu empty? koja proverava da li struktura sadrži ijedan element. Uzvičnik na kraju naziva metode ukazuje da ona koristi sa opreznošću. Niz klasa iz standardne Ruby biblioteke definiše parove metoda koje se isto zovu, osim što se jedna završava uzvičnikom. Obično se radi o tome da jedna vraća modifikovanu kopiju izvornog objekta, dok druga vrši operaciju nad samim objektom. Tako Array objekti imaju metode sort i sort!. U Railsu je češće razlika u (ne)bacanju izuzetka, npr. save i save!.
 
-Klase i moduli
---------------
-
 Izuzeci
 -------
+
+Izuzeci su objekti klase Exception ili neke od njenih podklasa. Metoda raise baca zadati izuzetak, nakon čega se tok izvršenja koda prekida i Ruby vrši pretragu unazad po steku za kodom koji može da rukuje izuzetkom.
+
+Izuzecima se rukuje stavljanjem koda između ključnih reči begin i end i korišćenjem rescue za presretanje određenih klasa izuzetaka:
+
+begin
+  content = load_blog_data(file_name)
+rescue BlogDataNotFound
+  STDERR.puts "Ne pronalazim datoteku #{file_name}"
+rescue BlogDataFormatError
+  STDERR.puts "Neispravni podaci u #{file_name}"
+rescue Exception => exc
+  STDERR.puts "Opšta greška prilikom čitanja #{file_name}: #{exc.message}"
+end
+
+Klase
+-----
+
+Klasa je skup srodnih metoda koje vrše operacije nad stanjem jednog objekta. Stanje objekta je određeno njegovim podacima članovima: promenljivima čija imena počinju sa @ i čije su vrednosti specične za dati objekat.
+
+Sledi primer definicije klase u Rubiju:
+
+class Order < ActiveRecord::Base
+
+  has_many :line_items
+
+  def self.all_unpaid
+    all('paid = 0')
+  end
+
+  def total
+    sum = 0
+    line_items.each { |li| sum += li.total }
+  end
+end
+
+Klasa Order je definisana kao podklasa klase Base u ActiveRecord modulu.
+
+U Railsu su česte upotrebe deklaracija na nivou klase. U ovom primeru has_many je metoda koju definiše ActiveRecord. Poziva se u trenutku definisanja klase Order. Obično iza upotrebe ovakvog tipa metoda stoji nekoliko pretpostavki o klasi koja je poziva, pa se zato često nazivaju deklaracijama.
+
+Unutar tela klase mogu se definisati klasne metode i metode instanci. Klasne metode bi se u jezicima C++ i Java nazivale statičkim metodama klase, a metode instanci funkcijama članicama. Prefiks self. metodu čini klasnom, kao što je slučaj sa metodom all_unpaid u primeru iznad. Ona se može pozvati bilo gde u aplikaciji na sledeći način:
+
+unpaid_orders = Order.all_unpaid
+
+Obične definicije metoda stvaraju metode instanci, kao što je funkcija total. One se pozivaju nad objektima klase, na primer:
+
+puts "Ukupna suma je #{order.total}"
+
+Promenljive instanci nisu dostupne van klase. Za to je potrebno definisati pristupne metode:
+
+class Person
+  def initialize(name)
+    @name = name
+  end
+
+  def name
+    @name
+  end
+
+  def name=(new_name)
+    @name = new_nam
+  end
+end
+
+p = Person.new("Milutin")
+puts p.name               # => Milutin
+p.name = "Milica"
+puts p.name               # => Milica
+
+Ruby sadrži metoda koje predstavljaju prečicu za pisanje pristupnih metoda.
+
+class Person
+  attr_acessor :name  # stvara metode očitavanja i dodele
+  attr_reader  :age   # stvara samo metodu očitavanja
+  attr_writer  :note  # stvara samo metodu dodele
+end
+
+Moduli
+------
+
+Moduli su slični klasama po tome što takođe sadrže skup metoda, konstanti i definicije drugih modula i klasa. Za razliku od klasa, na osnovu modula nije moguće napraviti objekat.
+
+Moduli imaju dve svrhe. Prva je da se ponašaju kao prostor imena, omogućavajući definisanje metoda čija imena neće biti u koliziji sa istoimenim metodama definisanim u drugim delovima aplikacije. Drugo, omogućavaju deobu funkcionalnosti među klasama. Takvi moduli se često nazivaju mixin. Ukoliko se klasa pomeša sa modulom, metode definisane u modulu će biti dosupne kao metode instance te klase. Više klasa može da se pomeša sa istim modulom, deleći njegovo ponašanje bez koriščenja nasleđivanja. Takođe je moguće pomešati više modula u jednu klasu.
+
+Enumerable je poznat primer mixin modula. Enumerable definiše niz korisnih iteratora koji se zasnivaju na iteratoru each, koju sam modul ne definiše. Klasa koja definiše metodu each i pomeša se sa modulom Enumerable dobiće na raspolaganje niz drugih metoda kao što su collect, find, select i sort. Za mešanje modula sa klasom koristi se metoda include, što u praksi liči na ključnu reč:
+
+class Archive
+  include Enumerable
+end
+
+Reference objekata
+------------------
+
+Rad sa objektima u Rubiju je zapravo rad sa referencama na objekte. Ruby nema pokazivače. Reference su dostupne jedino implementaciji samog jezika. Nema načina da se dobije adresa neke vrednosti, dereferencira vrednost ili vrše aritmetičke operacije nad pokazivačima. Kada dodeljujemo vrednost promenljivoj mi zapravo smeštamo referencu na objekat u tu promenljivu. To ilustruje sledeći primer:
+
+s = "Ruby" # Napravi objekat tipa String. Sačuvaj referencu na njega u s.
+t = s      # Iskopiraj referencu u t. s i t se sada odnose na isti objekat.
+t[-1] = "" # Modifikuj objekat kroz referencu t.
+print s    # Pristupi modifikovanom objektu preko s. Ispisuje "Rub".
+t = "Java" # t se sada odnosi na drugi objekat.
+print s,t  # Ispisuje "RubJava".
+
+Metodama se takođe prosleđuju reference objekata. Može se reći da se parametri metoda prosleđuju po vrednosti, ali da su te vrednosti reference. To za posledicu ima da metode mogu preko dobijenih referenci da modifikuju objekte, što će biti vidljivo kada metoda završi sa izvršavanjem.
+
+Životni vek objekata
+--------------------
+
+Objekti klasa se najčešće stvaraju metodom new:
+
+obj = Person.new
+
+new je metoda klase Class. Ona alocira memoriju potrebnu za čuvanje novog objekta, potom inicijalizuje stanje praznog objekta pozivajući njegovu metodu initialize. Većina klasa definiše svoju initialize metodu, koja odgovara pojmu konstruktora iz jezika C++ ili Java. Klasa naravno može po potrebi da definiše i dodatne factory (klasne) metode.
+
+Ruby objekti ne moraju da se eksplicitno oslobađaju iz memorije, kao što je to slučaj u jezicima C i C++. Ruby koristi tehniku garbage collection koja automatski uništava objekte koji više nisu potrebni. Objekat postaje kandidat za uklanjanje iz memorije je nedostupan, tj. kada nema nijedne preostale reference na taj objekat osim iz drugih nedostupnih objekata.
