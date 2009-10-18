@@ -42,6 +42,15 @@ Modifikatori naredbi su korisni kada je telo naredbe ili petlje samo jedan izraz
 puts "Paran broj broj" unless x%2 == 1
 distance = distance * 1.2 while distance < 100
 
+Metode
+------
+
+Metode se definišu pomoću ključne reči def. Rezultat izvršavanja je uvek rezultat poslednje linije koda u njoj. Stoga se pisanje ključne reči return često izostavlja:
+
+def square(x)
+  x*x
+end
+
 Blokovi i iteratori
 -------------------
 
@@ -54,13 +63,85 @@ selected.inject do |sum, i| # izračunaj sumu elemenata => 6
   sum + x
 end
 
-times, each, select i inject su iteratori koji interakuju sa blokovima koda koji dolaze posle njih. Kontrola toka koja stoji iza ovoga je yield, naredba koja privremeno prebacuje kontrolu izvršavanja sa iteratora na blok koda koji je vezan za poziv iteratora. Kada dođe do kraja koda u bloku, metoda iteratora preuzima kontrolu i nastavlja sa izvršenjem od prve linije posle yield. Česta konvencija je da se jednolinijski blokovi pišu sa vitičastim zagradama, a blokovi sa više linija koda sa do/end.
+times, each, select i inject su iteratori koji interakuju sa blokovima koda koji dolaze posle njih. Kontrola toka koja stoji iza ovoga je yield, naredba koja privremeno prebacuje kontrolu izvršavanja sa iteratora na blok koji je vezan za poziv iteratora. Kada dođe do kraja koda u bloku, metoda iteratora preuzima kontrolu i nastavlja sa izvršenjem od prve linije posle ključne reči yield. Česta konvencija je da se jednolinijski blokovi pišu sa vitičastim zagradama, a blokovi sa više linija koda sa do/end. Naredni primer definiše metodu koja prima blok:
 
-Povezivanje bloka koda sa pozivom metode je osnovna i vrlo važna mogućnost Rubija. Ono ne mora biti vezano samo za petlje, npr.:
+# Generiše sekvencu od n brojeva m*i + c i prosleđuje ih bloku.
+def sequence(n, m, c)
+  i = 0
+  while(i < n)
+    yield i*m + c    # bloku prosledi naredni element sekvence
+    i += 1
+  end
+end
+
+sequence(5, 2, 2) { |x| puts x } # Ispisuje brojeve 2, 4, 6, 8, 10
+
+Povezivanje bloka koda sa pozivom metode je osnovna i vrlo važna mogućnost Rubija. Ono ne mora biti vezano samo za petlje, na primer:
 
 File.open("data.txt") do |f|
   line = f.readline
 end
+
+Jedna od osobina blokova je njihova anonimnost. Ne prosleđuju se metodama u uobičajenom smislu, nemaju ime i pozivaju se upotrebom ključne reči a ne metodom. Ukoliko je potrebna veća kontrola nad blokom (na primer, u slučaju da ga je potrebno proslediti drugoj metodi), dodaje se poslednji argument u nizu sa prefiksom &. Taj argument će se tada odnositi na blok, ukoliko se prosledi. Vrednost argumenta će biti objekat klase Proc, a umesto korišćenja yield, poziva se pomoću metode call:
+
+def sequence2(n, m, c, &b) # Eksplicitan argument za blok kao Proc
+  i = 0
+  while(i < n)
+    b.call(i*m + c)        # Poziv Proc-a njegovom metodom call
+    i += 1
+  end
+end
+
+# Blok se i dalje prosleđuje na isti način
+sequence2(5, 2, 2) { |x| puts x }
+
+Proc i lambda
+-------------
+
+U Rubiju je dakle moguće definisati objekat koji predstavlja blok koda, što predstavlja osnovu funkcionalnog programiranja. U zavisnosti od toga na koji način se objekat kreira, on se naziva proc ili lambda. Proc se ponaša slično bloku, dok se lamda ponaša kao metoda. Oboje su međutim instance klase Proc.
+
+U prethodnom primeru je već prikazan jedan način stvaranja Proc objekta: povezivanjem bloka sa metodom koja je definisana sa argumentom za blok. Takva metoda je slobodna da recimo vrati Proc objekat. Sledeći kratak primer definiše metodu koja implicitnom konverzijom pravi proc na osnovu bloka:
+
+def makeproc(&p)
+  p
+end
+
+Sa makeproc je dalje moguće napraviti Proc objekat:
+
+adder = makeproc { |x,y| x+y }
+
+Promenljiva adder je sada referenca na Proc objekat vrste proc. Pomoću njegove metode call može se pozvati blok koda koji sadrži:
+
+sum = adder.call(2,2) # => 4
+
+Isti objekat se mogao dobiti i korišćenjem new metode:
+
+adder = Proc.new { |x,y| x+y }
+
+Druga tehnika kreiranja Proc objekata je pomoću metode lambda. lambda je metoda Kernel modula, pa deluje kao globalna funkcija. Proc objekat koji vraća je vrste lambda a ne proc. lambda ne očekuje da joj se proslede argumenti, ali njen poziv mora biti praćen blokom:
+
+is_positive = lambda { |x| x > 0 }
+
+lambda i proc se razlikuju u nekoliko pojedinosti, a najvažnije se tiču ponašanja naredbe return i načina na koji tretiraju prosleđene argumente.
+
+U slučaju proc, na naredbu return se neće vratiti samo kod iz bloka već i metoda koja ga sadrži. Kod lambdi međutim, koje se ponašaju više kao metode, vraća se samo iz same lambde. Ova osobina čini lambdu praktičnijom u slučajevima kompleksnijih blokova.
+
+proc prihvata argumente u fleksibilnoj yield semantici koja toleriše različitost u broju lvrednosti i drvrednosti (vrednosti sa leve, odnosno desne strane operatora dodele), dok se lambda drži stroge semantike metoda.
+
+p = Proc.new { |x,y| print x,y }
+p.call(1)       # x,y=1:     nil se koristi za dvrednost koja nedostaje: ispisuje 1nil
+p.call(1,2)     # x,y=1,2:   2 lvrednosti, 2 dvrednosti:    ispisuje 12
+p.call(1,2,3)   # x,y=1,2,3: dodatna dvrednost se ignoriše: ispisuje 12
+p.call([1,2])   # x,y=[1,2]: niz se automatski otpakovao:   ispisuje 12
+
+Lambde se međutim moraju pozivati sa tačno onoliko argumenata sa koliko su definisane:
+
+l = lambda { |x,y| print x,y }
+l.call(1,2)     # Radi
+l.call(1)       # Pogrešan broj argumenata
+l.call(1,2,3)   # Pogrešan broj argumenata
+l.call([1,2])   # Pogrešan broj argumenata
+l.call(*[1,2])  # Radi, eksplicitno otpakivanje niza
 
 Heševi i simboli
 ----------------
@@ -72,10 +153,12 @@ h = {
   :dva => 2
 }
 h[:jedan]                   # => 1
-h[:dva]                     # => 2
 h[:tri] = 3                 # dodaje nov par u heš
+
 h.each do |key, value|      # ugrađeni iterator each daje ključ i vrednost
-  print "#{key}: #{value}"  # primer interpolacije stringova; implicitno je pozvana metoda to_s, koju poseduje svaki objekat
+  print "#{key}: #{value}"  # primer interpolacije stringova;
+                            # implicitno je pozvana metoda to_s,
+                            # koju poseduje svaki objekat
 end
 
 Heševi se često koriste kao parametri funkcija. U Rubiju je pisanje vitičastih zagrada opciono ukoliko je heš poslednji u listi parametara. Rails ovu mogućnost često koristi, a rezultat je intuitivniji i izražajniji kod. U sledećoj liniji se prosleđuje jedan heš funkciji redirect_to. Zbog izostavljanja zagrada utisak je da Rails ima definisane posebne ključne ruči za ovu svrhu.
@@ -89,15 +172,6 @@ Simboli se mogu koristiti u reflektivnom kodu kao referenca na naziv metode. Nar
 name = :size
 if o.respond_to? name
   o.send(name)
-end
-
-Metode
-------
-
-Metode se definišu pomoću ključne reči def. Rezultat izvršavanja je uvek rezultat poslednje linije koda u njoj. Stoga se pisanje ključne reči return često izostavlja:
-
-def square(x)
-  x*x
 end
 
 Imena, prefiksi i sufiksi
@@ -135,16 +209,16 @@ Metoda raise klase Kernel baca izuzetak. Inače, metode koje definiše Kernel su
 
 Naredne tri linije su ekvivalentni primeri bacanja izuzetka:
 
-raise ArgumentError, "los argument" if n < 1
-raise ArgumentError.new("los argument") if n < 1
-raise ArgumentError.exception("los argument") if n < 1
+raise ArgumentError, "loš argument" if n < 1
+raise ArgumentError.new("loš argument") if n < 1
+raise ArgumentError.exception("loš argument") if n < 1
 
 Klase
 -----
 
 Klasa je skup srodnih metoda koje vrše operacije nad stanjem jednog objekta. Stanje objekta je određeno njegovim podacima članovima: promenljivima čija imena počinju sa @ i čije su vrednosti specične za dati objekat.
 
-Sledi primer definicije klase u Rubiju:
+Sledi primer definicije klase:
 
 class Order < ActiveRecord::Base
 
@@ -175,6 +249,7 @@ puts "Ukupna suma je #{order.total}"
 Promenljive instanci nisu dostupne van klase. Za to je potrebno definisati pristupne metode:
 
 class Person
+
   def initialize(name)
     @name = name
   end
