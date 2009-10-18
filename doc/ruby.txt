@@ -268,12 +268,25 @@ puts p.name               # => Milutin
 p.name = "Milica"
 puts p.name               # => Milica
 
-Ruby sadrži metoda koje predstavljaju prečicu za pisanje pristupnih metoda.
+Ruby sadrži metode koje predstavljaju prečicu za pisanje pristupnih metoda.
 
 class Person
-  attr_acessor :name  # stvara metode očitavanja i dodele
+  attr_accessor :name  # stvara metode očitavanja i dodele, kao u kodu iznad
   attr_reader  :age   # stvara samo metodu očitavanja
   attr_writer  :note  # stvara samo metodu dodele
+end
+
+p = Person.new
+p.name = "Zlatan"
+puts p.name       # => Zlatan
+
+attr_accessor, attr_reader i attr_writer su metode definisane u klasi Module. Sve klase su moduli (klasa Class je podklasa klase Module), tako da se ove metode mogu koristiti unutar definicije bilo koje klase.
+
+Pomoću ključne reči self se može doći do instance trenutnog objekta u datom kontekstu koda:
+
+class Person
+  # ...
+  self.name = "Ime"
 end
 
 Moduli
@@ -288,6 +301,8 @@ Enumerable je poznat primer mixin modula. Enumerable definiše niz korisnih iter
 class Archive
   include Enumerable
 end
+
+Ovakvo korišćenje modula pruža prednosti koje proizilaze iz višestrukog nasleđivanja poznatog iz jezika C++, ali održava odnose među klasama u jednostavnoj strukturi stabla i značajno olakšava implementaciju.
 
 Reference objekata
 ------------------
@@ -313,3 +328,169 @@ obj = Person.new
 new je metoda klase Class. Ona alocira memoriju potrebnu za čuvanje novog objekta, potom inicijalizuje stanje praznog objekta pozivajući njegovu metodu initialize. Većina klasa definiše svoju initialize metodu, koja odgovara pojmu konstruktora iz jezika C++ ili Java. Klasa naravno može po potrebi da definiše i dodatne factory (klasne) metode.
 
 Ruby objekti ne moraju da se eksplicitno oslobađaju iz memorije, kao što je to slučaj u jezicima C i C++. Ruby koristi tehniku garbage collection koja automatski uništava objekte koji više nisu potrebni. Objekat postaje kandidat za uklanjanje iz memorije je nedostupan, tj. kada nema nijedne preostale reference na taj objekat osim iz drugih nedostupnih objekata.
+
+Metaprogramiranje
+-----------------
+
+Refleksija, ili introspekcija, u osnovi prosto znači da program u vreme izvršavanja može da odredi svoje stanje i strukturu. Ruby program može, na primer, da dobije listu svih metoda klase Hash. Ruby API za refleksiju omogućava da program takođe i modifikuje svoje stanje i strukturu. Tako Ruby program može da dinamički postavlja vrednosti imenovanih promenljivih, poziva, menja i presreće pozive metoda, definiše nove klase i metode, manipuliše lancem nasleđivanja. Rubijev API za refleksiju, zajedno sa osobinama jezika kao što su njegova dinamička priroda, strukture blokova i iteratora i opcione zagrade, čine osnovu za metaprogramiranje.
+
+Metaprogramiranje je tehnika programiranja kojom se piše kod koji piše drugi kod ili se samoispituje (introspekcija). Metaprogramiranje je tesno povezano sa idejom stvaranja jezika specifičnih domena (DSL). DSL-ovi u Rubiju obično koriste pozive metoda i blokove kao da se radi o ključnim rečima proširenja jezika za određenu namenu. U narednim odeljcima će biti prikazane neke od tehnika metaprogramiranja u Rubiju.
+
+Evaluacija stringova
+--------------------
+
+Ruby program može da generiše string validnog Ruby koda i izvrši ga koristeći Kernel.eval:
+
+x = 1
+eval "x+1"  # => 2
+
+Ova mogućnost je istovremeno i moćna i potencijalno opasna, ukoliko se izvršava kod koji zavisi od korisničkog unosa.
+
+Upiti i postavljanje promenljivih
+---------------------------------
+
+Ruby definiše niz metoda za pravljenje upita i postavljanje promenljivih, kako instance tako i klase.
+
+o = Object.new
+o.instance_variable_set(:@x, 0) # prefix @ je obavezan
+o.instance_variable_get(:@x)    # => 0
+o.instance_variable_defined?(:@x) # => true
+
+Object.class_variable_set(:@@x, 1)
+Object.class_variable_get(:@@x)
+
+Math.const_set(:EPI, Math::E*Math::PI)
+Math.const_get(:EPI)             # => 8.53973422267357
+Math.const_defined? :EPI         # => true
+
+Definisanje metoda pomoću instance_eval i class_eval
+----------------------------------------------------
+
+Klasa Object definiše metodu instance_eval, a klasa Module definiše metodu class_eval. Obe ove funkcije izvršavaju (evaluate) Ruby kod kao što to radi eval, ali postoje dve značajne razlike. Prva je da one izvršavaju kod u kontekstu datog objekta ili modula - vrednost self je objekat ili modul u kome se kod izvršava. Evo primera:
+
+o.instance_eval("@x")  # Vraća vrednost podatka člana @x objekta o
+
+# Definiše metod instance len klase String koga vraća njegovu dužinu
+String.class_eval("def len; size; end")
+
+# Definiše klasnu metodu String.empty
+String.instance_eval("def empty; ''; end")
+
+puts String.new("text").len  # => 4
+puts String.empty            # => ""
+
+Druga bitna razlika između ove dve metode i globalne eval jeste to što instance_eval i class_eval mogu da prime blok koda za evaluaciju. Kada im se prosledi blok umesto stringa, kod u bloku se izvršava u odgovarajućem kontekstu. Sledi primer ekvivalentan prethodnom:
+
+o.instance_eval { @x }
+
+String.class_eval do
+  def len
+    size
+  end
+end
+
+String.instance_eval { def empty; ""; end }
+
+Klasna metoda se može definisati i sa class_eval koristeći sintaksu definisanja klasnih metoda:
+
+String.class_eval { def self.empty; ""; end }
+
+Naredni konkretniji primer pokazuje implementaciju metoda readonly i readwrite koje su ekvivalentne ranije opisanim metodama attr_reader i attr_accessor. One se definišu kao metode instanci klase Module, što ih čini metodama instanci klase Class. Kako je svaka klasa, tj. konstanta koja se piše velikim slovom i određuje je, objekat klase Class, to će metode readonly i readwrite biti klasne metode svake dalje definisane korisničke klase. Implementacija samih metoda se oslanja na class_eval i string konstrukciju tela metoda.
+
+class Module
+  private
+  def readonly(*syms)
+    return if syms.size == 0
+    code = ""
+    # Generiši string Ruby koda koji definiše metodu očitavanja atributa.
+    # Primetimo kako se simbol interpolira u string koda.
+    syms.each do |s|
+      code << "def #{s}; @#{s}; end\n"
+    end
+    # class_eval-uiraj generisani kod i napravi metodu instance.
+    class_eval code
+  end
+
+  def readwrite(*syms)
+    return if syms.size == 0
+    code = ""
+    syms.each do |s|
+      code << "def #{s}; @#{s} end\n"
+      code << "def #{s}=(value); @#{s} = value; end\n"
+    end
+    class_eval code
+  end
+end
+
+class Person
+  readwrite :name, :age
+end
+
+p = Person.new
+p.name = "Joanna"
+puts p.name        # => Joanna
+
+Definisanje metoda pomoću define_method
+---------------------------------------
+
+Drugi način dinamičkog kreiranja metoda jeste pomoću define_method. Ova funkcija se razlikuje od class_eval i instance_eval po tome što kao jedini parametar očekuje heš. Kao primer prikazaćemo implementaciju metode attributes koja ima istu ulogu kao readwrite, ali nešto drugačiju sintaksu korišćenja. Ključevi heša će označavati simbole atributa, a opcione vrednosti njihove početne vrednosti. Pošto vitičaste zagrade heša ne moraju da se pišu u slučaju da je heš poslednji argument u nizu, upotreba ove funkcije može izgledati ovako:
+
+class Point
+  attributes :x => 0, :y => 0
+end
+
+Ovo je još jedan primer korišćenja fleksibilne sintakse Rubija za kreiranje lako čitljivih metoda koje liče na ključne reči jezika. U Railsu su metode ovog tipa veoma česte, poput metoda asocijacije (has_many, belongs_to) i validacije (validates_presence_of).
+
+class Module
+  def attributes(hash)
+    hash.each_pair do |symbol, default|
+      getter = symbol                     # Ime metode očitavanja
+      setter = :"#{symbol}="              # Ime metoda pisanja
+      variable = :"@#{symbol}"            # Ime podatka člana
+
+      define_method getter do             # Definiši metodu očitavanja
+        if instance_variable_defined? variable
+          instance_variable_get variable  # Vrati promenljivu, ukoliko je definisana
+        else
+          default                         # U suprotnom vrati početnu vrednost
+        end
+      end
+
+      define_method setter do |value|     # Definiši metodu pisanja
+        instance_variable_set variable,   # Postavi vrednost podatka člana
+                              value       # Na vrednost prosleđenu u vreme izvršavanja
+      end
+    end
+  end
+  
+  private :attributes
+end
+
+Lančanje metoda
+---------------
+
+Pored dinamičkog kreiranja metoda, Ruby nudi i dinamičku modifikaciju metoda. Metode se modifikuju tehnikom koja se naziva lančanje metoda (alias chaining, method chaining). Postupak je sledeći. Prvo se napravi se alias metode koja želi da se modifikuje. alias pruža ime koje se odnosi na nemodifikovanu verziju metode. Potom se kreira nova verzija metode, koja bi trebalo da pozove originalnu njenim aliasom, ali je slobodna da doda proizvoljnu funkcionalnost pre i nakon što to učini.
+
+class TippingPoint < Point
+
+  alias original_x, x
+
+  def x
+    original_x * 100
+  end
+end
+
+Rukovanje nedefinisanim metodama
+--------------------------------
+
+Kada algoritam rezolucije imena metode ne uspe da pronađe pozvanu metodu, on traži metodu po imenu method_missing. Po pozivu ove metode, prvi argument je simbol koji imenuje metodu koja prethodno nije pronađena. Taj simbol prati niz argumenata koji su prosleđeni u izvornom pozivu, uključujući i eventualni blok.
+
+Ugrađena implementacija metode method_missing u Kernel modulu jednostavno baca izuzetak NoMethodError. Ovaj izuzetak, ukoliko se ne uhvati, uzrokuje kraj programa uz poruku o grešci, kao što se i očekuje u slučaju poziva metode koja ne postoji.
+
+Definisanje sopstvene metode method_missing pruža mogućnost rukovanja bilo kojom vrstom poziva koji se upućuju instancama klase. method_missing je jedna od najčešće korišćenih tehnika metaprogramiranja u Rubiju. Kompletan primer će biti prikazan kasnije u opisu implementacije aplikacije gradmx.
+
+U Railsu se method_missing koristi, na primer, za generisanje dinamičkih upitnih funkcija. Na primer, ukoliko imamo klasu Person sa atributom name, Rails pruža na raspolaganje klasnu metodu find_by_name, čiji je prvi argument traženo ime, a ostali opcioni kao u slučaju opšte metode find:
+
+recent_joannas = Person.find_by_name("joanna", :conditions => ["created_at < ?", 2.weeks.ago])
+
+Ova metoda naravno nigde nije unapred definisana, već postoji implementacija method_missing koja, ukoliko prepozna format metode prihvatljiv po konvenciji, dinamički stvara klasnu metodu koja odgovara atributu koji se pominje u nazivu metode. To takođe znači da se ove metode kreiraju samo jedanput, i to tek na zahtev.
