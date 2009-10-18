@@ -112,7 +112,7 @@ Ruby metode mogu da se završe i znakom jednakosti, upitnikom i uzvičnikom. Met
 o.x=(1) # Uobičajena sintaksa pozivanja metode
 o.x = 1 # Pozivanje metoda kroz dodelu
 
-Upitnika označava predikat - metode koje vraćaju Boolean vrednost. Na primer, klase Array i Hash definišu metodu empty? koja proverava da li struktura sadrži ijedan element. Uzvičnik na kraju naziva metode ukazuje da ona koristi sa opreznošću. Niz klasa iz standardne Ruby biblioteke definiše parove metoda koje se isto zovu, osim što se jedna završava uzvičnikom. Obično se radi o tome da jedna vraća modifikovanu kopiju izvornog objekta, dok druga vrši operaciju nad samim objektom. Tako Array objekti imaju metode sort i sort!. U Railsu je češće razlika u (ne)bacanju izuzetka, npr. save i save!.
+Upitnik označava predikat - metode koje vraćaju Boolean vrednost. Na primer, klase Array i Hash definišu metodu empty? koja proverava da li struktura sadrži ijedan element. Uzvičnik na kraju naziva metode ukazuje da ona koristi sa opreznošću. Niz klasa iz standardne Ruby biblioteke definiše parove metoda koje se isto zovu, osim što se jedna završava uzvičnikom. Obično se radi o tome da jedna vraća modifikovanu kopiju izvornog objekta, dok druga vrši operaciju nad samim objektom. Tako Array objekti imaju metode sort i sort!. U Railsu je češće razlika u (ne)bacanju izuzetka, npr. save i save!.
 
 Izuzeci
 -------
@@ -130,6 +130,14 @@ rescue BlogDataFormatError
 rescue Exception => exc
   STDERR.puts "Opšta greška prilikom čitanja #{file_name}: #{exc.message}"
 end
+
+Metoda raise klase Kernel baca izuzetak. Inače, metode koje definiše Kernel su globalne funkcije, kao i svaka korisnička funkcija koja se definiše van tela bilo koje klase. Korisničke globalne funkcije se definišu kao privatne metode klase Object.
+
+Naredne tri linije su ekvivalentni primeri bacanja izuzetka:
+
+raise ArgumentError, "los argument" if n < 1
+raise ArgumentError.new("los argument") if n < 1
+raise ArgumentError.exception("los argument") if n < 1
 
 Klase
 -----
