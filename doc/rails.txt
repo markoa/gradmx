@@ -1,11 +1,13 @@
 2. Ruby on Rails
 ================
 
-Ruby on Rails (ili kraće Rails) je framework za razvoj web aplikacija napisan u programskom jeziku Ruby. Dizajniran je sa ciljem da olakša razvoj time što polazi od pretpostavki o tome na koji način programer treba da reši probleme sa kojima se suočava tokom rada.
+Ruby on Rails (ili kraće Rails) je open source framework za razvoj web aplikacija napisan u programskom jeziku Ruby. 
 
-Rails filozofija uključuje nekoliko vodećih principa:
+Rails se temelji na nekoliko vodećih principa:
 
-  * DRY – “Don’t Repeat Yourself” – sugeriše da delove koda ne treba pisati više od jednom.
+  * MVC arhitektura
+
+  * DRY – "Don’t Repeat Yourself" – sugeriše da delove koda ne treba pisati više od jednom.
 
   * Convention Over Configuration – znači da Rails izlazi u susret programeru sa skupom preporučenih rešenja umesto zahteva za izborom komponenti i niza konfiguracionih datoteka.
 
@@ -18,9 +20,9 @@ Rails se zasniva na Model, View, Controller (MVC) arhitekturi. Prednosti MVC ukl
 
   * Izolovanje poslovne logike od korisničkog interfejsa
 
-  * Držanje principa DRY
+  * Držanje pri DRY principu
 
-  * Lakše održavanje kod pošto je uvek jasno gde pripadaju različiti tipovi koda 
+  * Lakše održavanje koda pošto je uvek jasno gde pripadaju različiti tipovi koda 
 
 2.1.1 Modeli podataka
 ---------------------
@@ -53,22 +55,36 @@ Kompletan skup komponenti koje Rails pruža za razvoj web aplikacija uključuje:
 2.2.1 Action Controller
 -----------------------
 
-Action Controller je komponenta koja upravlja kontrolerima u Rails aplikaciji. Action Controller obrađuje dolazeće zahteve, izdvaja parametre i otprema ih akciji kojoj su namenjeni. Usluge koje pruža uključuju upravljanje sesijom, kontrola renderovanja template-a (šablona prezentacije) i upravljanje preusmeravanjima (redirections).
+Action Controller je komponenta koja upravlja kontrolerima u Rails aplikaciji. Action Controller obrađuje dolazeće zahteve, izdvaja parametre i otprema ih akciji kojoj su namenjeni. Usluge koje pruža uključuju:
+
+ * kontrola renderovanja template-a (šablona prezentacije)
+ * rutiranje (podrazumevan šema je REST)
+ * upravljanje preusmeravanjima (redirections)
+ * upravljanje sesijom
+ * filtere za pre- i post-obradu odgovora
+ * automatski benchmarking i logovanje
+ * keširanje
 
 2.2.2 Action View
 -----------------
 
-Action View upravlja prezentacionim slojem Rails aplikacije - renderovanjem template-a - uključujući ugnježdene i parcijalne šablone, kao i ugrađenu podršku za AJAX.
+Action View upravlja prezentacionim slojem Rails aplikacije. On uključuje:
+
+ * Ruby jezik za pisanje HTML šablona ERB
+ * jezik za pisanje šablona zasnovan na Builder biblioteci koji se koristi za XML i JSON sadržaj
+ * pomoćne metode za rukovanje formularima, datumima, linkovima i tekstom
+ * podršku za ponovno koriščenje šablona kroz pojam layouta
+ * JavaScript i Ajax integraciju
 
 2.2.3 Active Record
 -------------------
 
-Active Record je osnova za sve modele u Rails aplikaciji. Pruža apstrakciju nad bazom podataka, osnovnu CRUD funkcionalnost, napredne mogućnosti pronalaženja zapisa i povezivanja modela.
+Active Record biblioteka je osnova za sve modele u Rails aplikaciji. Pruža apstrakciju nad bazom podataka, osnovnu CRUD funkcionalnost, napredne mogućnosti pronalaženja zapisa i povezivanja modela.
 
 2.2.4 Action Mailer
 -------------------
 
-Action Mailer je framework za izradu email usluga. Može se koristiti za slanje emaila na osnovu šablona, ili primanje i obradu.
+Action Mailer je framework za implementaciju email usluga. Može se koristiti za slanje emaila na osnovu šablona, primanje i obradu.
 
 2.2.5 Active Resource
 ---------------------
@@ -101,5 +117,59 @@ Na primer, zahtev kao što je:
 DELETE /photos/17
 
 bi se u Rails aplikaciji smatrao zahtevom za brisanjem Photo resursa čiji je ID 17. U praksi se REST pokazao kao prirodan način modelovanja arhitekture web aplikacija, a Rails to dodatno olakšava time što koristi konvencije koje programera oslobađaju kompleksnosti i razlika među web pretraživačima.
+
+2.4 Active Record
+-----------------
+
+Active Record je zapravo dizajn patern prvobitno objavljen u knjizi Martina Faulera Patterns of Enterprise Application Architecture (Addison-Wesley Professional, 2002). Ruby biblioteka Active Record, čiji je, kao i Railsa, originalni autor Dejvid Hajnemajer Hanson, jeste implementacija ovog paterna, i njegov glavni doprinos je u tome što otklanja dva velika problema: nedostatak asocijacija i nasleđivanje. Prvi problem je rešen dodavanje makroa koji liče na proširenje programskog jezika, a drugi integracijom paterna nasleđivanja jednom tabelom (Single Table Inheritance).
+
+Osnovni koncept Active Recorda i drugih biblioteka za objektno relaciono mapiranje je da relacione baze podataka mogu da se predstave objektnim kodom ukoliko se tabele baze mapiraju na klase, redovi tabela kao objekti, a polja tabela kao atributi objekata. Na primer, za datu tabelu users u nekoj bazi podataka:
+
+Users table
+  id polje (integer; auto-inkrementovan; primarni ključ)
+  username polje (text tipa)
+  password polje (text tipa)
+
+class User < ActiveRecord::Base
+end
+
+U Rails kodu, User instance se mogu kreirati na sledeći način:
+
+# pravi novi User objekat u memoriji, a potom i novi zapis u bazi podataka
+user = User.new(:username => "marko")
+user.password = "secret"
+user.save
+
+# Kreira novi User objekat u memoriji od podataka u users tabeli pod ID-em 1.
+# Ekvivalentno ANSI SQL upitu "select * from users where id = 1".
+found_user = User.find(1)
+
+# brise zapise iz baze u kojima je username "marko"
+User.delete("username = 'marko'")
+
+Active Record se razlikuje od drugih ORM biblioteka, kao što je Java Hibernate, uglavnom po načinu na koji se konfiguriše, odnosno, po opštem nedostatku neophodne konfiguracije. Jedina neophodna konfiguraciona datoteka za pristup bazi podataka je config/database.yml, koja po generisanju novog Rails projekta izgleda ovako:
+
+# SQLite version 3.x
+#   gem install sqlite3-ruby (not necessary on OS X Leopard)
+development:
+  adapter: sqlite3
+  database: db/development.sqlite3
+  pool: 5
+  timeout: 5000
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  adapter: sqlite3
+  database: db/test.sqlite3
+  pool: 5
+  timeout: 5000
+
+production:
+  adapter: sqlite3
+  database: db/production.sqlite3
+  pool: 5
+  timeout: 5000
 
 [*] http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm
