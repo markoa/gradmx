@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+puts "** Starting tyrants"
+Dir.chdir("./db/tyrant")
+`tyrantmanager start`
+
+Signal.trap("SIGINT") do
+  puts "** Shutting down"
+  Dir.chdir("./db/tyrant")
+  `tyrantmanager stop`
+  Dir.chdir("../../")
+end
+
+Dir.chdir("../../")
+`mongrel_rails start`
