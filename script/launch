@@ -6,10 +6,21 @@ Dir.chdir("./db/tyrant")
 
 Signal.trap("SIGINT") do
   puts "** Shutting down"
+
+  puts "** Stopping Mongrel"
+  `mongrel_rails stop`
+
   Dir.chdir("./db/tyrant")
   `tyrantmanager stop`
   Dir.chdir("../../")
 end
 
 Dir.chdir("../../")
-`mongrel_rails start`
+puts "** Starting Mongrel server"
+`mongrel_rails start -d`
+
+IO.popen("tail -f log/development.log 2>&1") do |f|
+  while line = f.gets do
+    puts line
+  end
+end
