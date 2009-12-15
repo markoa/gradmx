@@ -61,7 +61,7 @@ class TokyoRecord
   end
 
   def save
-    time = Time.current.to_s
+    time = Time.current.to_s(:db)
     if new_record?
       @key = table.genuid.to_s
       @data["created_at"] = time
