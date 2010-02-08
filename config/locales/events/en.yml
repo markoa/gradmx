@@ -1,0 +1,25 @@
+"en":
+  events:
+    new_event: Announce a new event
+
+    to_announce_new: to announce a new event
+
+    announced_by: announced by
+    time_begin: Begins
+    location: Location
+    comments: Comments
+    say_comment: Say it
+    edit_info: Edit event information
+    back_to_all: Back to all events
+    people_attending: People attending
+    are_you_going: Are you going?
+    you_are_in: You are in
+    cancel_presence: Cancel the plan
+
+    new: New event
+    edit: Edit
+
+    title: Title
+    time_end: Ends
+    description: Description
+

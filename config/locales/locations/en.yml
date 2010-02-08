@@ -1,0 +1,12 @@
+"en":
+  locations:
+    publish_new: Publish new
+    new: New location
+    edit: Edit information about {{location}}
+    back_to_all: Back to all locations
+    back_to_location: Back to location {{location}}
+
+    name: Name
+
+    published_by: Published by
+

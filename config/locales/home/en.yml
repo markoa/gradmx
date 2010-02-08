@@ -1,0 +1,21 @@
+"en":
+  home:
+    view_events: View all events
+    login: Log in
+    signup: sign up
+    log_out: log out
+    highlights: Highlights
+
+    hi: Hi
+
+    # shared between login and signup
+    login_name: User name
+    password: Password
+    remember_me: Remember me
+    log_me_in: Let me in
+
+    sign_up_as_new_user: Sign up as a new user
+    city: City
+    country: Country
+    confirm_password: Confirm your password
+    sign_up_button: Sign me up
