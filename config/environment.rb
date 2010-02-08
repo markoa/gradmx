@@ -23,13 +23,9 @@ Rails::Initializer.run do |config|
   # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
   # config.gem "aws-s3", :lib => "aws/s3"
-  config.gem "mislav-will_paginate", :version => "2.3.8",
-    :lib => "will_paginate", :source => "http://gems.github.com"
-
-  config.gem "rufus-tokyo", :version => "1.0",
-    :lib => "rufus/tokyo/tyrant", :source => "http://gems.github.com"
-
-  config.gem "tyrantmanager", :version => "1.3.0"
+  config.gem "will_paginate"
+  config.gem "rufus-tokyo"
+  config.gem "tyrantmanager"
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
