@@ -1,0 +1,43 @@
+h1. gradmx
+
+University project, integrates use of "Tokyo Cabinet":http://1978th.net/tokyocabinet/ / "Tyrant":http://1978th.net/tokyotyrant/ in a Ruby on Rails web application for posting and viewing events and locations. Includes TokyoRecord, a tiny wrapper around "rufus-tokyo":http://github.com/jmettraux/rufus-tokyo for accessing Tokyo Tyrant tables. Tyrant instances are managed with "tyrantmanager":http://github.com/copiousfreetime/tyrantmanager.
+
+h2. Setup
+
+Install Tokyo Cabinet and Tokyo Tyrant. On Ubuntu, you usually need to install this library before that:
+
+<pre><code>apt-get install libbz2-dev</code></pre>
+
+Get the latest sources from the Tokyo website, unpack and do the <code>./configure && make && sudo make install</code> thing.
+
+Install all required gems:
+
+<pre><code>sudo rake gems:install</code></pre>
+
+Copy database.yml and adjust it to your MySQL setup:
+
+<pre><code>cp config/database.yml.example config/database.yml</code></pre>
+
+h2. Starting the application
+
+You may wish to generate some fake data:
+
+<pre><code>rake db:bootstrap</pre></code>
+
+There's a script which will tell tyrantmanager to run all the Tyrant instances and boot Mongrel:
+
+<pre><code>./script/launch</code></pre>
+
+One of the Tyrant tables is called Highlights, for simulating the case of serving variable data on a homepage that gets a lot of views. You can populate it with random events with the following rake task:
+
+<pre><code>rake events:highlight</code></pre>
+
+h2. License
+
+LICENSE
+
+Copyright © 2009 Marko Anastasov
+
+Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. 
