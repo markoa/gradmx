@@ -2,6 +2,8 @@ h1. gradmx
 
 University project, integrates use of "Tokyo Cabinet":http://1978th.net/tokyocabinet/ / "Tyrant":http://1978th.net/tokyotyrant/ in a Ruby on Rails web application for posting and viewing events and locations. Includes TokyoRecord, a tiny wrapper around "rufus-tokyo":http://github.com/jmettraux/rufus-tokyo for accessing Tokyo Tyrant tables. Tyrant instances are managed with "tyrantmanager":http://github.com/copiousfreetime/tyrantmanager.
 
+The basic idea is to store some data which is written frequently in "Tokyo Cabinet tables":http://1978th.net/tokyocabinet/spex-en.html, as "benchmarks show":http://www.marko.anastasov.name/blog/2009/05/02/know-your-storage-options-benchmarking-tokyo-cabinet/ that it is much faster than ActiveRecord and MySQL. So there are three such tables: for storing page views, event presences and event highlights.
+
 h2. Setup
 
 Install Tokyo Cabinet and Tokyo Tyrant. On Ubuntu, you usually need to install this library before that:
@@ -32,9 +34,18 @@ One of the Tyrant tables is called Highlights, for simulating the case of servin
 
 <pre><code>rake events:highlight</code></pre>
 
-h2. License
+Eventually you'll see something like
 
-LICENSE
+<a href="http://dl.dropbox.com/u/830772/Screenshots/gradmx/Screenshot-labore%20tempore%20quis%20perferendis%20%E2%98%85%20gradmx%20-%20Mozilla%20Firefox.png"><img src="http://dl.dropbox.com/u/830772/Screenshots/gradmx/Screenshot-labore%20tempore%20quis%20perferendis%20%E2%98%85%20gradmx%20-%20Mozilla%20Firefox.png" width="300" height="200" /></a>
+
+h2. Testing
+
+To run the test suite, you need to manually run two Tyrant instances on expected ports:
+
+<pre><code>ttserver -port 19851 page_views.tct
+ttserver -port 19861 presences.tct</code></pre>
+
+h2. License
 
 Copyright © 2009 Marko Anastasov
 

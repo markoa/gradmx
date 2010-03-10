@@ -5,6 +5,7 @@ crni_bik:
   name: Crni Bik
   city: novisad
   description: Kafana u Zeleznickoj
+  user_id: 1
 
 art_klinika:
   id: 2
